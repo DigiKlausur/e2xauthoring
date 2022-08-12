@@ -28,12 +28,10 @@ class TaskPoolModel(E2xTaskPoolModel):
         if not os.path.exists(path) or not os.path.isdir(path):
             return dict(
                 status="error",
-                message=f"The pool {pool} does not exist or is not a directory."
+                message=f"The pool {pool} does not exist or is not a directory.",
             )
         repo = create_repository(path)
-        return dict(
-            status="success" if repo is not None else "error"
-        )
+        return dict(status="success" if repo is not None else "error")
 
     def list(self, **kwargs):
         pools = super().list(**kwargs)
@@ -48,5 +46,6 @@ class TaskPoolModel(E2xTaskPoolModel):
             super().remove(name=name)
             return dict(status="success", message="")
         except Exception as e:
-            return dict(status="error", message=tb.format_exception(None, e, e.__traceback__))
-
+            return dict(
+                status="error", message=tb.format_exception(None, e, e.__traceback__)
+            )

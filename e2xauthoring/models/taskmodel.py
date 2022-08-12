@@ -28,7 +28,7 @@ class TaskModel(E2xTaskModel):
         )
         return dict(success=commit_okay)
 
-    def list(self, pool:str):
+    def list(self, pool: str):
         tasks = super().list(pool=pool)
         if is_version_controlled(os.path.join(self.base_path(), pool)):
             for task in tasks:
