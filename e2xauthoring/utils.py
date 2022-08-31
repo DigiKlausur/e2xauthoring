@@ -157,7 +157,6 @@ def get_author() -> Dict[str, str]:
     Returns:
         Dict[str, str]: A dictionary containing the name and email address of the author
     """
-    return None
     try:
         return dict(
             name=Git().config(["--global", "user.name"]),
