@@ -39,7 +39,7 @@ class TaskModel(E2xTaskModel):
 
     def git_status(self, pool, task):
         path = os.path.join(self.base_path(), pool, task)
-        git_status = vcs_status(path)
+        git_status = vcs_status(path, relative=True)
         if git_status["repo"] is None:
             return dict(status="not version controlled")
         changed_files = (
@@ -47,3 +47,17 @@ class TaskModel(E2xTaskModel):
         )
         git_status["status"] = "modified" if len(changed_files) > 0 else "unchanged"
         return git_status
+
+    def git_diff(self, pool, task, file):
+        path = os.path.join(self.base_path(), pool, task, file)
+        git_status = vcs_status(path)
+        if git_status["repo"] is None:
+            return dict(path=path, diff="Not version controlled or not added")
+        else:
+            relpath = os.path.relpath(path, start=git_status["repo"].working_tree_dir)
+            return dict(
+                path=path,
+                diff=git_status["repo"]
+                .git.diff(relpath, color=True)
+                .replace("\n", "<br/>"),
+            )
