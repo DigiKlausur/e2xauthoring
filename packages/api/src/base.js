@@ -32,8 +32,7 @@ export class BaseAPI {
       url += "?" + new URLSearchParams(params).toString();
     }
     const response = await fetch(url);
-    const json = await response.json();
-    return json;
+    return response.json();
   }
 
   async post(url, data) {
@@ -46,8 +45,7 @@ export class BaseAPI {
       body: JSON.stringify(data),
     };
     const response = await fetch(url, settings);
-    const json = await response.json();
-    return json;
+    return response.json();
   }
 
   async put(url, data) {
@@ -60,7 +58,52 @@ export class BaseAPI {
       body: JSON.stringify(data),
     };
     const response = await fetch(url, settings);
-    const json = await response.json();
-    return json;
+    return response.json();
+  }
+}
+
+export async function get(url, params = undefined) {
+  if (params !== undefined) {
+    url += "?" + new URLSearchParams(params).toString();
+  }
+  const response = await fetch(url);
+  return response.json();
+}
+
+export async function post(url, data) {
+  let settings = {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRFToken": getCookie("_xsrf"),
+    },
+    body: JSON.stringify(data),
+  };
+  const response = await fetch(url, settings);
+  return response.json();
+}
+
+export async function put(url, data) {
+  let settings = {
+    method: "PUT",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRFToken": getCookie("_xsrf"),
+    },
+    body: JSON.stringify(data),
+  };
+  const response = await fetch(url, settings);
+  return response.json();
+}
+
+export class E2xAPI {
+  constructor(base_url) {
+    this.base_url = pathJoin([base_url, "e2x", "authoring", "api"]);
+  }
+}
+
+export class NbGraderAPI {
+  constructor(base_url) {
+    this.base_url = pathJoin([base_url, "formgrader", "api"]);
   }
 }

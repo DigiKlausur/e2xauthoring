@@ -1,2 +1,2 @@
 export { pathJoin } from "./base";
-export { AuthoringAPI } from "./authoring-api";
+export { AuthoringAPI } from "./api";
