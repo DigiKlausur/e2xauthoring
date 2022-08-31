@@ -2,7 +2,7 @@ import os
 import shutil
 from typing import Dict, List, Union
 
-from git import Actor, BadName, InvalidGitRepositoryError, Repo
+from git import Actor, BadName, Git, GitCommandError, InvalidGitRepositoryError, Repo
 
 
 def is_parent_path(parent_path: str, child_path: str) -> bool:
@@ -37,11 +37,13 @@ def is_version_controlled(path: str) -> bool:
         return False
 
 
-def vcs_status(path: str) -> Dict[str, Union[List[str], bool]]:
+def vcs_status(path: str, relative: bool = False) -> Dict[str, Union[List[str], bool]]:
+
     """Get the version control status of a path
 
     Args:
         path (str): Path to check
+        relative (bool, optional): Turn paths into relative paths starting at path. Defaults to False.
 
     Returns:
         dict: A dictionary containing untracked files, unstaged files and staged files under the path
@@ -67,6 +69,11 @@ def vcs_status(path: str) -> Dict[str, Union[List[str], bool]]:
             for f in status[field]
             if is_parent_path(path, os.path.join(repo.working_tree_dir, f))
         ]
+        if relative:
+            status[field] = [
+                os.path.relpath(os.path.join(repo.working_tree_dir, f), start=path)
+                for f in status[field]
+            ]
 
     return status
 
@@ -142,3 +149,37 @@ def create_repository(path: str, exists_ok: bool = True, author: Actor = None) -
     command.append(gitignore)
     repo.git.commit(command)
     return repo
+
+
+def get_author() -> Dict[str, str]:
+    """Get the current global git author
+
+    Returns:
+        Dict[str, str]: A dictionary containing the name and email address of the author
+    """
+    return None
+    try:
+        return dict(
+            name=Git().config(["--global", "user.name"]),
+            email=Git().config(["--global", "user.email"]),
+        )
+    except GitCommandError:
+        pass
+
+
+def set_author(name: str, email: str) -> Dict[str, Union[str, bool]]:
+    """Set the global git author
+
+    Args:
+        name (str): The name of the author
+        email (str): The email address of the author
+
+    Returns:
+        Dict[str, Union[str, bool]]: A dictionary containing status information
+    """
+    try:
+        Git().config(["--global", "user.name", name])
+        Git().config(["--global", "user.email", email])
+        return dict(success=True)
+    except GitCommandError:
+        return dict(success=False, message="There was an error setting the author")
