@@ -11,7 +11,7 @@ from .handlers import default_handlers as handlers
 class AuthoringApp(NbGrader, BaseApp):
 
     template_path = os.path.join(os.path.dirname(__file__), "templates")
-    static_path = os.path.join(os.path.dirname(__file__), "..", "static")
+    static_path = os.path.join(template_path, "authoring", "static")
 
     def __init__(self, **kwargs) -> None:
         NbGrader.__init__(self, **kwargs)
