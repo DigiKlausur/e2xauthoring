@@ -12,7 +12,8 @@ import SelectTasks from "./SelectTasks";
 import SelectTemplate from "./SelectTemplate";
 import WorksheetOptions from "./WorksheetOptions";
 
-import { AuthoringAPI, pathJoin } from "@e2xauthoring/api";
+import { AuthoringAPI } from "@e2xauthoring/api";
+import { getNotebookUrl } from "../../utils/urls";
 
 const stepLabels = [
   "Name Worksheet",
@@ -52,13 +53,9 @@ export default function CreateWorksheetStepper({ assignment, name }) {
         if (res["success"]) {
           setTimeout(
             () =>
-              (window.location.href = pathJoin([
-                window.base_url,
-                "notebooks",
-                "source",
-                assignment,
-                `${name}.ipynb`,
-              ])),
+              (window.location.href = getNotebookUrl(
+                `source/${assignment}/${name}.ipynb`
+              )),
             500
           );
         }
