@@ -34,6 +34,7 @@ export default function NewTaskDialog({ pool }) {
       title="Create a new task"
       buttonText="Add Task"
       handleSubmit={formik.handleSubmit}
+      isSubmitting={formik.isSubmitting}
     >
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={2} sx={{ width: "30ch" }}>

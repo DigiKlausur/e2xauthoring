@@ -34,6 +34,7 @@ export default function NewTemplateDialog() {
       title="Create a new template"
       buttonText="Add Template"
       handleSubmit={formik.handleSubmit}
+      isSubmitting={formik.isSubmitting}
     >
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={2} sx={{ width: "30ch" }}>

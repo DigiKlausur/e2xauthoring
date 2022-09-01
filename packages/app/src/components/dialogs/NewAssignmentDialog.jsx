@@ -44,6 +44,7 @@ export default function NewAssignmentDialog() {
       title="Create a new assignment"
       buttonText="Add Assignment"
       handleSubmit={formik.handleSubmit}
+      isSubmitting={formik.isSubmitting}
     >
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={2} sx={{ width: "30ch" }}>

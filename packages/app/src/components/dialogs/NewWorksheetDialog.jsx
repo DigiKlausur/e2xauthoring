@@ -27,6 +27,7 @@ export default function NewWorksheetDialog({ assignment }) {
       title="Create a new worksheet"
       buttonText="Add Worksheet"
       handleSubmit={formik.handleSubmit}
+      isSubmitting={formik.isSubmitting}
     >
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={2} sx={{ width: "30ch" }}>

@@ -44,6 +44,7 @@ export default function SetGitAuthorDialog() {
         handleSubmit={formik.handleSubmit}
         open={open}
         setOpen={setOpen}
+        isSubmitting={formik.isSubmitting}
       >
         <form onSubmit={formik.handleSubmit}>
           <Stack spacing={2} sx={{ width: "30ch" }}>

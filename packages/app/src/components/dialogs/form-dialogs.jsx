@@ -8,6 +8,7 @@ export function FormDialogWithButton({
   handleSubmit,
   buttonText,
   children,
+  isSubmitting,
 }) {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -31,8 +32,9 @@ export function FormDialogWithButton({
             variant="contained"
             color="success"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-            {buttonText}
+            {isSubmitting ? "Submitting" : buttonText}
           </Button>
         }
       >
@@ -49,6 +51,7 @@ export function FormDialogWithoutButton({
   children,
   open,
   setOpen,
+  isSubmitting,
 }) {
   const handleClose = () => {
     setOpen(false);
@@ -65,8 +68,9 @@ export function FormDialogWithoutButton({
             variant="contained"
             color="success"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-            {buttonText}
+            {isSubmitting ? "Submitting" : buttonText}
           </Button>
         }
       >
