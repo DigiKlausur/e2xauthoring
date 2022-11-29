@@ -229,7 +229,7 @@ class WorksheetAPI extends E2xAPI {
   }
 
   new(assignment, name, tasks, template, templateOptions, worksheetOptions) {
-    if (worksheetOptions["task-headers"] !== undefined) {
+    if (worksheetOptions["task-headers"] === undefined) {
       worksheetOptions["task-headers"] = false;
     }
     let resources = {
