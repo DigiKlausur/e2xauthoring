@@ -20,7 +20,7 @@ classifiers=[
     "Programming Language :: Python :: 3.9",
 ]
 dependencies = [
-    "e2xgrader==0.1.0dev0",
+    "e2xgrader",
     "GitPython"
 ]
 
