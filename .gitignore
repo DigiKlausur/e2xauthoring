@@ -1,5 +1,5 @@
 # Dynamic files
-e2xauthoring/static
+e2xauthoring/app/templates
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
