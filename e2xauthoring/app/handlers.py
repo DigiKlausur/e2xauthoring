@@ -1,6 +1,5 @@
 import os
 import sys
-from email.policy import default
 
 from e2xgrader.server_extensions.grader.apps.authoring.handlers import app_url
 from e2xgrader.utils import urljoin

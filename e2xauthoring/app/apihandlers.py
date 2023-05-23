@@ -13,7 +13,6 @@ from e2xgrader.server_extensions.grader.apps.authoring.apihandlers import (
     api_url,
     assignment_regex,
     name_regex,
-    pool_regex,
 )
 from e2xgrader.utils import urljoin
 from nbgrader.server_extensions.formgrader.base import check_xsrf
