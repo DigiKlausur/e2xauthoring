@@ -47,3 +47,8 @@ build_cmd = "build"
 artifacts = [
     "e2xauthoring/app/templates/"
 ]
+
+[tool.ruff]
+line-length = 100
+ignore-init-module-imports = true
+select = ["E", "F", "I"]
