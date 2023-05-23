@@ -38,15 +38,16 @@ def is_version_controlled(path: str) -> bool:
 
 
 def vcs_status(path: str, relative: bool = False) -> Dict[str, Union[List[str], bool]]:
-
     """Get the version control status of a path
 
     Args:
         path (str): Path to check
-        relative (bool, optional): Turn paths into relative paths starting at path. Defaults to False.
+        relative (bool, optional): Turn paths into relative paths starting at path.
+                                   Defaults to False.
 
     Returns:
-        dict: A dictionary containing untracked files, unstaged files and staged files under the path
+        dict: A dictionary containing untracked files, unstaged files and staged files
+              under the path
     """
     if not is_version_controlled(path):
         return dict(repo=None)
@@ -90,7 +91,8 @@ def commit_path(
     Args:
         repo (Repo): A git repository instance
         path (str): The path to commit
-        add_if_untracked (bool, optional): If untracked files should be added before committing. Defaults to False.
+        add_if_untracked (bool, optional): If untracked files should be added before committing.
+        Defaults to False.
         message (str, optional): The commit message. Defaults to None.
         author (Actor, optional): An author object to specify the author of the commit.
                                   If not set the global git author will be used. Defaults to None.
@@ -119,8 +121,9 @@ def create_repository(path: str, exists_ok: bool = True, author: Actor = None) -
 
     Args:
         path (str): The base path of the repository
-        exists_ok (bool, optional): If the repository already exists do not throw an exception. Defaults to True.
-        author (Actor, optional): author (Actor, optional): An author object to specify the author of the commit.
+        exists_ok (bool, optional): If the repository already exists do not throw an exception.
+                                    Defaults to True.
+        author (Actor, optional): An author object to specify the author of the commit.
                                   If not set the global git author will be used. Defaults to None.
 
     Returns:
@@ -130,9 +133,10 @@ def create_repository(path: str, exists_ok: bool = True, author: Actor = None) -
     repo = None
     try:
         repo = Repo(path, search_parent_directories=True)
-        assert (
-            exists_ok
-        ), f"A repository already exists at {repo.working_tree_dir}. Run with option exists_ok=True to ignore."
+        assert exists_ok, (
+            f"A repository already exists at {repo.working_tree_dir}."
+            "Run with option exists_ok=True to ignore."
+        )
         return repo
     except InvalidGitRepositoryError:
         repo = Repo.init(path)
