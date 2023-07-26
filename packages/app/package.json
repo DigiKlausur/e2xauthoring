@@ -1,10 +1,10 @@
 {
   "name": "@e2xauthoring/app",
   "homepage": "e2x/authoring",
-  "version": "0.1.0",
+  "version": "0.1.0-dev0",
   "private": true,
   "dependencies": {
-    "@e2xauthoring/api": "*",
+    "@e2xauthoring/api": "0.1.0-dev0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@fontsource/roboto": "^4.5.8",
