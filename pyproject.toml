@@ -44,7 +44,7 @@ build-function = "hatch_jupyter_builder.npm_builder"
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build"
 
-[tool.hatch.build.targets.wheel]
+[tool.hatch.build]
 artifacts = [
     "e2xauthoring/app/templates/"
 ]
