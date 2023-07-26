@@ -1,11 +1,11 @@
 import os
 
-from e2xgrader.server_extensions.grader.apps.base import BaseApp
+from e2xcore import BaseApp
 from nbgrader.apps.baseapp import NbGrader
 from tornado import web
 
-from .apihandlers import default_handlers
-from .handlers import default_handlers as handlers
+from .handlers.apihandlers import default_handlers
+from .handlers.handlers import default_handlers as handlers
 
 
 class AuthoringApp(NbGrader, BaseApp):
