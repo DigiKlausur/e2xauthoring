@@ -1,15 +1,13 @@
 import os
 import shutil
-from typing import List
 
 import nbformat
-from e2xcore.utils.nbgrader_cells import new_read_only_cell
+from e2xcore.utils.nbgrader_cells import is_nbgrader_cell, new_read_only_cell
 from nbformat.v4 import new_notebook
 from traitlets import Unicode
 
 from ...utils.gitutils import commit_path, vcs_status
-from ..dataclasses import Task
-from ..dataclasses.message import ErrorMessage, SuccessMessage
+from ..dataclasses import ErrorMessage, SuccessMessage, Task
 from .manager import BaseManager
 
 
@@ -19,7 +17,7 @@ class TaskManager(BaseManager):
     )
 
     def __get_task_info(self, task, pool):
-        base_path = os.path.join(self.base_path(), pool)
+        base_path = os.path.join(self.base_path, pool)
         notebooks = [
             file
             for file in os.listdir(os.path.join(base_path, task))
@@ -53,7 +51,7 @@ class TaskManager(BaseManager):
         return dict(success=commit_okay)
 
     def git_status(self, pool, task):
-        path = os.path.join(self.base_path(), pool, task)
+        path = os.path.join(self.base_path, pool, task)
         git_status = vcs_status(path, relative=True)
         if git_status["repo"] is None:
             return dict(status="not version controlled")
@@ -64,7 +62,7 @@ class TaskManager(BaseManager):
         return git_status
 
     def git_diff(self, pool, task, file):
-        path = os.path.join(self.base_path(), pool, task, file)
+        path = os.path.join(self.base_path, pool, task, file)
         git_status = vcs_status(path)
         if git_status["repo"] is None:
             return dict(path=path, diff="Not version controlled or not added")
@@ -77,7 +75,25 @@ class TaskManager(BaseManager):
                 .replace("\n", "<br/>"),
             )
 
-    def create(self, pool: str, name: str):
+    def get(self, pool: str, name: str) -> SuccessMessage | ErrorMessage:
+        path = os.path.join(self.base_path, pool, name)
+        if not os.path.exists(path):
+            return ErrorMessage(error="The task does not exists")
+        points, n_questions = self.__get_task_info(name, pool)
+        git_status = self.git_status(pool, name)
+        if "repo" in git_status:
+            del git_status["repo"]
+        return SuccessMessage(
+            data=Task(
+                name=name,
+                pool=pool,
+                points=points,
+                n_questions=n_questions,
+                git_status=git_status,
+            )
+        )
+
+    def create(self, pool: str, name: str) -> SuccessMessage | ErrorMessage:
         if not self.is_valid_name(name):
             return ErrorMessage(error="The name is invalid!")
         path = os.path.join(self.base_path, pool, name)
@@ -94,19 +110,26 @@ class TaskManager(BaseManager):
             source=(
                 f"# {name}\n"
                 "Here you should give the general information about the task.\n"
-                "Then add questions via the menu above.\n",
-                "A task should be self containet",
+                "Then add questions via the menu above.\n"
+                "A task should be self contained"
             ),
         )
         nb.cells.append(cell)
-        nbformat.write(os.path.join(path, f"{name}.ipynb"))
+        nbformat.write(nb, os.path.join(path, f"{name}.ipynb"))
         return SuccessMessage()
 
-    def remove(self, pool, name):
-        shutil.rmtree(os.path.join(self.base_path, pool, name))
+    def remove(self, pool, name) -> SuccessMessage | ErrorMessage:
+        path = os.path.join(self.base_path, pool, name)
+        if not os.path.exists(path):
+            return ErrorMessage(error="The task does not exist")
+        shutil.rmtree(path)
+        return SuccessMessage()
 
-    def list(self, pool) -> List[Task]:
+    def list(self, pool) -> SuccessMessage | ErrorMessage:
         tasks = []
+        path = os.path.join(self.base_path, pool)
+        if not os.path.exists(path):
+            return ErrorMessage(error=f"No pool with the name {pool} exists.")
         for task_dir in self.listdir(os.path.join(self.base_path, pool)):
             points, n_questions = self.__get_task_info(task_dir, pool)
             git_status = self.git_status(pool, task_dir)
@@ -120,4 +143,35 @@ class TaskManager(BaseManager):
                     git_status=git_status,
                 )
             )
-        return tasks
+        return SuccessMessage(data=tasks)
+
+    def copy(
+        self, old_name: str, new_name: str, pool: str = ""
+    ) -> ErrorMessage | SuccessMessage:
+        src = os.path.join(pool, old_name)
+        dst = os.path.join(pool, new_name)
+        status = super().copy(src, dst)
+        if not status.success:
+            return status
+        dst_path = os.path.join(self.base_path, dst)
+        shutil.move(
+            os.path.join(dst_path, f"{old_name}.ipynb"),
+            os.path.join(dst_path, f"{new_name}.ipynb"),
+        )
+        nb_path = os.path.join(dst_path, f"{new_name}.ipynb")
+        nb = nbformat.read(nb_path, as_version=nbformat.NO_CONVERT)
+        for cell in nb.cells:
+            if is_nbgrader_cell(cell):
+                grade_id = cell.metadata.nbgrader.grade_id
+                cell.metadata.nbgrader.grade_id = grade_id.replace(old_name, new_name)
+        nbformat.write(nb, nb_path)
+
+        return SuccessMessage()
+
+    def rename(
+        self, old_name: str, new_name: str, pool: str = ""
+    ) -> ErrorMessage | SuccessMessage:
+        msg = self.copy(old_name, new_name, pool)
+        if not msg.success:
+            return msg
+        self.remove(pool, old_name)

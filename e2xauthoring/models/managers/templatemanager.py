@@ -1,14 +1,12 @@
 import os
 import shutil
-from typing import List
 
 import nbformat
 from e2xcore.utils.nbgrader_cells import new_read_only_cell
 from nbformat.v4 import new_notebook
 from traitlets import Unicode
 
-from ..dataclasses import Template
-from ..dataclasses.message import ErrorMessage, SuccessMessage
+from ..dataclasses import ErrorMessage, SuccessMessage, Template
 from .manager import BaseManager
 
 
@@ -17,7 +15,15 @@ class TemplateManager(BaseManager):
         "templates", help="The relative directory where the templates are stored"
     )
 
-    def create(self, name):
+    def get(self, name: str) -> SuccessMessage | ErrorMessage:
+        path = os.path.join(self.base_path, name)
+        if not os.path.exists(path):
+            return ErrorMessage(
+                error=f"A template with the name {name} does not exists!"
+            )
+        return SuccessMessage(data=Template(name=name))
+
+    def create(self, name: str) -> SuccessMessage | ErrorMessage:
         if not self.is_valid_name(name):
             return ErrorMessage(error="The name is invalid!")
         path = os.path.join(self.base_path, name)
@@ -38,13 +44,33 @@ class TemplateManager(BaseManager):
         )
         cell.metadata["nbassignment"] = dict(type="header")
         nb.cells.append(cell)
-        nbformat.write(os.path.join(self.base_path, name, f"{name}.ipynb"))
+        nbformat.write(nb, os.path.join(self.base_path, name, f"{name}.ipynb"))
         return SuccessMessage()
 
-    def remove(self, name):
-        shutil.rmtree(os.path.join(self.base_path, name))
+    def remove(self, name: str) -> SuccessMessage | ErrorMessage:
+        path = os.path.join(self.base_path, name)
+        if not os.path.exists(path):
+            return ErrorMessage(error="The template does not exist")
+        shutil.rmtree(path)
+        return SuccessMessage()
 
-    def list(self) -> List[Template]:
-        return [
-            Template(name=template_dir) for template_dir in self.listdir(self.base_path)
-        ]
+    def list(self) -> SuccessMessage | ErrorMessage:
+        if not os.path.exists(self.base_path):
+            return ErrorMessage(error="Template directory not found.")
+        return SuccessMessage(
+            data=[
+                Template(name=template_dir)
+                for template_dir in self.listdir(self.base_path)
+            ]
+        )
+
+    def copy(self, old_name: str, new_name: str) -> SuccessMessage | ErrorMessage:
+        status = super().copy(old_name, new_name)
+        if not status.success:
+            return status
+        dst_path = os.path.join(self.base_path, new_name)
+        shutil.move(
+            os.path.join(dst_path, f"{old_name}.ipynb"),
+            os.path.join(dst_path, f"{new_name}.ipynb"),
+        )
+        return SuccessMessage()
