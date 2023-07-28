@@ -9,8 +9,8 @@ from traitlets import Unicode
 from e2xauthoring.models.managers.taskpoolmanager import TaskPoolManager
 
 from ..utils.gitutils import commit_path, vcs_status
+from .base import BaseManager
 from .dataclasses import Task
-from .manager import BaseManager
 
 
 class TaskManager(BaseManager):

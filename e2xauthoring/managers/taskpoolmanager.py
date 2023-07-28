@@ -4,8 +4,8 @@ import shutil
 from traitlets import Unicode
 
 from ..utils.gitutils import create_repository, is_version_controlled
+from .base import BaseManager
 from .dataclasses import TaskPool
-from .manager import BaseManager
 
 
 class TaskPoolManager(BaseManager):

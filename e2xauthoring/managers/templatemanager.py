@@ -6,8 +6,8 @@ from e2xcore.utils.nbgrader_cells import new_read_only_cell
 from nbformat.v4 import new_notebook
 from traitlets import Unicode
 
+from .base import BaseManager
 from .dataclasses import Template
-from .manager import BaseManager
 
 
 class TemplateManager(BaseManager):

@@ -1,5 +1,5 @@
 from .assignmentmanager import AssignmentManager
-from .manager import BaseManager
+from .base import BaseManager
 from .presetmanager import PresetManager
 from .taskmanager import TaskManager
 from .taskpoolmanager import TaskPoolManager

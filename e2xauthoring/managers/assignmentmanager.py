@@ -3,7 +3,7 @@ import os
 
 from traitlets import Unicode
 
-from .manager import BaseManager
+from .base import BaseManager
 
 
 class AssignmentManager(BaseManager):
