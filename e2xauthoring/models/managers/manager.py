@@ -8,8 +8,6 @@ from nbgrader.coursedir import CourseDirectory
 from traitlets import Unicode
 from traitlets.config import LoggingConfigurable
 
-from ..dataclasses import ErrorMessage, SuccessMessage
-
 
 class BaseManager(LoggingConfigurable):
     directory = Unicode(".", help="The directory of the items to manage")
@@ -31,36 +29,30 @@ class BaseManager(LoggingConfigurable):
         ]
 
     @abstractmethod
-    def get(self, **kwargs) -> SuccessMessage | ErrorMessage:
+    def get(self, **kwargs):
         pass
 
     @abstractmethod
-    def create(self, **kwargs) -> SuccessMessage | ErrorMessage:
+    def create(self, **kwargs):
         pass
 
     @abstractmethod
-    def remove(self, **kwargs) -> SuccessMessage | ErrorMessage:
+    def remove(self, **kwargs):
         pass
 
     @abstractmethod
-    def list(self, **kwargs) -> SuccessMessage | ErrorMessage:
+    def list(self, **kwargs):
         pass
 
-    def copy(self, old_name: str, new_name: str) -> SuccessMessage | ErrorMessage:
+    def copy(self, old_name: str, new_name: str):
         src_path = os.path.join(self.base_path, old_name)
         dst_path = os.path.join(self.base_path, new_name)
-        if not os.path.exists(src_path):
-            return ErrorMessage(error="Source does not exist.")
-        if os.path.exists(dst_path):
-            return ErrorMessage(
-                error="Destination already exists. Please delete first or choose a new name."
-            )
+        assert os.path.exists(src_path), "Source does not exist."
+        assert not os.path.exists(
+            dst_path
+        ), "Destination already exists. Please delete first or choose a new name."
         shutil.copytree(src_path, dst_path)
-        return SuccessMessage()
 
-    def rename(self, old_name: str, new_name: str) -> SuccessMessage | ErrorMessage:
-        msg = self.copy(old_name, new_name)
-        if not msg.success:
-            return msg
+    def rename(self, old_name: str, new_name: str):
+        self.copy(old_name, new_name)
         self.remove(old_name)
-        return SuccessMessage()
