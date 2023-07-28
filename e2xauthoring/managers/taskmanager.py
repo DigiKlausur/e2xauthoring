@@ -6,11 +6,10 @@ from e2xcore.utils.nbgrader_cells import is_nbgrader_cell, new_read_only_cell
 from nbformat.v4 import new_notebook
 from traitlets import Unicode
 
-from e2xauthoring.models.managers.taskpoolmanager import TaskPoolManager
-
 from ..utils.gitutils import commit_path, vcs_status
 from .base import BaseManager
 from .dataclasses import Task
+from .taskpoolmanager import TaskPoolManager
 
 
 class TaskManager(BaseManager):
