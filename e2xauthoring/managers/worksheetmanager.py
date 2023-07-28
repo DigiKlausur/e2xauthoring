@@ -14,7 +14,7 @@ class WorksheetManager(BaseManager):
         return {"name": name, "assignment": assignment}
 
     def remove(self, name: str, assignment: str):
-        base_path = os.path.join(self.base_path(), assignment)
+        base_path = os.path.join(self.base_path, assignment)
         worksheet_files = os.path.join(base_path, "{}_files".format(name))
         if os.path.exists(worksheet_files):
             shutil.rmtree(worksheet_files)
@@ -23,7 +23,7 @@ class WorksheetManager(BaseManager):
             os.remove(worksheet)
 
     def list(self, assignment: str):
-        base_path = os.path.join(self.base_path(), assignment)
+        base_path = os.path.join(self.base_path, assignment)
         worksheetnbs = glob.glob(os.path.join(base_path, "*.ipynb"))
         worksheets = []
         for worksheetnb in worksheetnbs:
