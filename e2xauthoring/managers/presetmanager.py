@@ -3,10 +3,10 @@ import os
 import nbformat
 from traitlets import Unicode
 
-from .basemodel import BaseModel
+from .manager import BaseManager
 
 
-class PresetModel(BaseModel):
+class PresetManager(BaseManager):
     task_preset_path = Unicode(
         os.path.join(os.path.dirname(__file__), "presets", "questions")
     ).tag(config=True)
@@ -42,9 +42,11 @@ class PresetModel(BaseModel):
 
     def get_preset(self, preset_path, preset_name):
         path = os.path.join(preset_path, "{}.ipynb".format(preset_name))
-        if os.path.isfile(path):
-            nb = nbformat.read(path, as_version=4)
-            return nb.cells
+        assert os.path.isfile(
+            path
+        ), f"No preset with name {preset_name} found in path {path}."
+        nb = nbformat.read(path, as_version=4)
+        return nb.cells
 
     def list_question_presets(self):
         presets = self.list_presets(self.task_preset_path)
@@ -57,6 +59,10 @@ class PresetModel(BaseModel):
             return self.get_preset(self.task_preset_path, preset_name)
         elif self.extra_task_preset_path is not None:
             return self.get_preset(self.extra_task_preset_path, preset_name)
+        else:
+            raise AssertionError(
+                f"No preset with name {preset_name} found in any path."
+            )
 
     def list_template_presets(self):
         presets = self.list_presets(self.template_preset_path)

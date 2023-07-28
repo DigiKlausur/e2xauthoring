@@ -3,16 +3,16 @@ import os
 
 from traitlets import Unicode
 
-from .basemodel import BaseModel
+from .manager import BaseManager
 
 
-class AssignmentModel(BaseModel):
+class AssignmentManager(BaseManager):
     directory = Unicode("source", help="The directory where assignments go.")
 
     def __get_assignment_info(self, assignment):
         return len(glob.glob(os.path.join(self.base_path(), assignment, "*.ipynb")))
 
-    def list(self, **kwargs):
+    def list(self):
         if not os.path.isdir(self.base_path()):
             os.makedirs(self.base_path(), exist_ok=True)
         assignmentfolders = os.listdir(self.base_path())
