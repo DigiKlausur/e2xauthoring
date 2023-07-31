@@ -23,7 +23,7 @@ class TaskPoolManager(BaseManager):
         )
 
     def turn_into_repository(self, pool):
-        path = os.path.join(self.base_path(), pool)
+        path = os.path.join(self.base_path, pool)
         assert os.path.exists(path) and os.path.isdir(
             path
         ), f"The pool {pool} does not exist or is not a directory."
