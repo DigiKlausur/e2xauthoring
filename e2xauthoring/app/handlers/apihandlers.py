@@ -86,6 +86,7 @@ default_handlers = [
             actions=dict(
                 get=dict(actions=["get", "list"]),
                 delete=dict(default="remove", actions=["remove"]),
+                post=dict(default="create", actions=["create"]),
             ),
         ),
     ),
@@ -111,7 +112,7 @@ default_handlers = [
             manager_cls=TemplateManager,
             actions=dict(
                 delete=dict(default="remove", actions=["remove"]),
-                get=dict(default="get", actions=["get", "list"]),
+                get=dict(default="get", actions=["get", "list", "list_variables"]),
                 post=dict(default="create", actions=["create"]),
                 put=dict(actions=["copy", "rename"]),
             ),
