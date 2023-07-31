@@ -70,8 +70,13 @@ class ApiManageHandler(E2xApiHandler):
     @status_msg
     def handle_request(self, request_type: str):
         action = self.get_argument(
-            "action", default=self.__allowed_actions[request_type]["default"]
+            "action", default=None  # self.__allowed_actions[request_type]["default"]
         )
+        if action is None:
+            action = (self.get_json_body() or dict()).get(
+                "action", self.__allowed_actions[request_type]["default"]
+            )
+
         return self.perform_action(
             action, self.__allowed_actions[request_type]["actions"]
         )
@@ -83,18 +88,15 @@ class ApiManageHandler(E2xApiHandler):
 
     @web.authenticated
     @check_xsrf
-    @status_msg
     def delete(self):
         self.finish(self.handle_request("delete").json())
 
     @web.authenticated
     @check_xsrf
-    @status_msg
     def put(self):
         self.finish(self.handle_request("put").json())
 
     @web.authenticated
     @check_xsrf
-    @status_msg
     def post(self):
         self.finish(self.handle_request("post").json())
