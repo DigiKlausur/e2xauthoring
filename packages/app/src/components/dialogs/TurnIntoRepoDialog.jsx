@@ -1,19 +1,18 @@
 import React from "react";
-import { Button, Stack } from "@mui/material";
+import { Button } from "@mui/material";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 
 import BaseDialog from "./BaseDialog";
 
 export default function TurnIntoRepoDialog({ pool, open, setOpen, reload }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const api = new AuthoringAPI(window.base_url);
   const handleClose = () => {
     setOpen(false);
   };
   const handleSubmit = () => {
     setIsSubmitting(true);
-    api.pools.init_as_repo(pool).then((status) => {
+    API.pools.turn_into_repository(pool).then((status) => {
       if (!status["success"]) {
         let error = status.hasOwnProperty("error")
           ? status["error"]

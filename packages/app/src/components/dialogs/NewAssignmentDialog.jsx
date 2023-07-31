@@ -5,7 +5,7 @@ import { Stack, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 
 import { FormDialogWithButton } from "./form-dialogs";
 import { FormikTextField } from "../forms/form-components";
@@ -14,7 +14,6 @@ import { getAssignmentUrl } from "../../utils/urls";
 import * as yup from "yup";
 
 export default function NewAssignmentDialog() {
-  const api = new AuthoringAPI(window.base_url);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -29,7 +28,7 @@ export default function NewAssignmentDialog() {
     }),
     onSubmit: (values) => {
       console.log(values);
-      api.assignments.new(values.name, values.date).then((status) => {
+      API.assignments.create(values.name, values.date).then((status) => {
         if (!status.name === values.name) {
           alert("Something went wrong!");
         } else {

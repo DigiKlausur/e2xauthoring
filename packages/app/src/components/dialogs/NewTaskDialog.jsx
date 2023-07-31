@@ -3,15 +3,13 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/material";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
-
+import API from "@e2xauthoring/api";
 import { FormDialogWithButton } from "./form-dialogs";
 import { FormikTextField } from "../forms/form-components";
 import { baseSchema } from "../forms/validation-schemas";
 import { getTaskUrl } from "../../utils/urls";
 
 export default function NewTaskDialog({ pool }) {
-  const api = new AuthoringAPI(window.base_url);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -19,9 +17,9 @@ export default function NewTaskDialog({ pool }) {
     },
     validationSchema: baseSchema,
     onSubmit: (values) => {
-      api.tasks.new(pool, values.name).then((status) => {
-        if (!status["success"]) {
-          alert(status["error"]);
+      API.tasks.create(pool, values.name).then((status) => {
+        if (!status.success) {
+          alert(status.error);
         } else {
           navigate(getTaskUrl(pool, values.name));
         }

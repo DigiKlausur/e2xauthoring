@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/material";
 
-import { pathJoin } from "@e2xauthoring/api";
+import { urlJoin } from "@e2xauthoring/api";
 
 import { FormDialogWithButton } from "./form-dialogs";
 import { FormikTextField } from "../forms/form-components";
@@ -18,7 +18,7 @@ export default function NewWorksheetDialog({ assignment }) {
     },
     validationSchema: baseSchema,
     onSubmit: (values) => {
-      navigate(pathJoin([getAssignmentUrl(assignment), "new", values.name]));
+      navigate(urlJoin(getAssignmentUrl(assignment), "new", values.name));
     },
   });
 

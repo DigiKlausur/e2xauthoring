@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -79,7 +79,6 @@ function GitStatusList({ git_status, pool, task }) {
 }
 
 export default function CommitTaskDialog({ open, setOpen, reload, row }) {
-  const api = new AuthoringAPI(window.base_url);
   const formik = useFormik({
     initialValues: {
       message: "",
@@ -91,9 +90,9 @@ export default function CommitTaskDialog({ open, setOpen, reload, row }) {
         .min(3, "Message should have at least 3 characters"),
     }),
     onSubmit: (values, { resetForm }) => {
-      api.tasks.commit(row.pool, row.name, values.message).then((status) => {
-        if (!status["success"]) {
-          alert(status["error"]);
+      API.tasks.commit(row.pool, row.name, values.message).then((status) => {
+        if (!status.success) {
+          alert(status.error);
         } else {
           reload();
           setOpen(false);
