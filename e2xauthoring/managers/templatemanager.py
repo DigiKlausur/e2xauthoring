@@ -6,6 +6,8 @@ from e2xcore.utils.nbgrader_cells import new_read_only_cell
 from nbformat.v4 import new_notebook
 from traitlets import Unicode
 
+from e2xauthoring.utils.notebookvariableextractor import NotebookVariableExtractor
+
 from .base import BaseManager
 from .dataclasses import Template
 
@@ -52,6 +54,11 @@ class TemplateManager(BaseManager):
             Template(name=template_dir) for template_dir in self.listdir(self.base_path)
         ]
         return templates
+
+    def list_variables(self, name):
+        path = os.path.join(self.base_path, name, f"{name}.ipynb")
+        assert os.path.exists(path), f"The template {name} does not exist."
+        return NotebookVariableExtractor().extract(path)
 
     def copy(self, old_name: str, new_name: str):
         super().copy(old_name, new_name)
