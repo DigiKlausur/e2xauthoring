@@ -66,12 +66,14 @@ export default function TemplateTable() {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
+            key="del"
             icon={<DeleteForeverIcon />}
             label="Delete"
             color="error"
             onClick={deleteTemplate(params.row.name)}
           />,
           <GridActionsCellItem
+            key="edit"
             icon={<EditIcon />}
             label="Edit"
             color="primary"

@@ -50,6 +50,7 @@ export default function WorksheetsTable({ assignment }) {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
+            key="del"
             icon={<DeleteForeverIcon />}
             label="Delete"
             color="error"

@@ -76,7 +76,7 @@ export default function SelectedTasksTable({
       <TableBody>
         {selectedTasks.length > 0 ? (
           selectedTasks.map((task) => (
-            <TableRow>
+            <TableRow key={task.name}>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.pool}</TableCell>
               <TableCell>{task.questions}</TableCell>

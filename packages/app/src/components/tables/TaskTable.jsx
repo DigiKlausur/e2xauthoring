@@ -130,6 +130,7 @@ export default function TaskTable(props) {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
+            key="del"
             icon={<DeleteForeverIcon />}
             color="error"
             label="Delete"
@@ -138,6 +139,7 @@ export default function TaskTable(props) {
           <>
             {params.row.hasOwnProperty("git_status") ? (
               <GridActionsCellItem
+                key="commit"
                 icon={<GitHubIcon />}
                 color="primary"
                 label="Commit"

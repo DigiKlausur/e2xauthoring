@@ -84,18 +84,21 @@ export default function TaskPoolTable() {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
+            key="del"
             icon={<DeleteForeverIcon />}
             label="Delete"
             color="error"
             onClick={deletePool(params.row.name)}
           />,
           <GridActionsCellItem
+            key="edit"
             icon={<EditIcon />}
             label="Edit"
             color="primary"
             onClick={editPool(params.row.name)}
           />,
           <GridActionsCellItem
+            key="repo"
             icon={<GitHubIcon />}
             label="Turn into repository"
             color="primary"

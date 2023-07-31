@@ -68,7 +68,7 @@ export default function WorksheetOptions({
           }
         >
           {Object.keys(kernels).map((kernel) => (
-            <MenuItem value={kernel}>
+            <MenuItem key={kernel} value={kernel}>
               {kernels[kernel].spec.display_name}
             </MenuItem>
           ))}

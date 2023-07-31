@@ -54,7 +54,7 @@ function SetTemplateVariables({
         {getReadableVariableStatus()}
         {Object.keys(templateOptions).length > 0 ? (
           Object.entries(templateOptions).map(([name, value]) => (
-            <Grid item>
+            <Grid item key={name}>
               <TextField
                 id={name}
                 name={name}
@@ -117,7 +117,9 @@ export default function SelectTemplate({
           autoWidth
         >
           {templates.map((_template) => (
-            <MenuItem value={_template.name}>{_template.name}</MenuItem>
+            <MenuItem key={_template.name} value={_template.name}>
+              {_template.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
