@@ -1,16 +1,19 @@
 import React from "react";
 import DataTable from "./DataTable";
-
-import { AuthoringAPI } from "@e2xauthoring/api";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import API from "@e2xauthoring/api";
 
 export default function WorksheetsTable({ assignment }) {
-  const api = new AuthoringAPI(window.base_url);
   const [loading, setLoading] = React.useState(true);
   const [rows, setRows] = React.useState([]);
   const load = () => {
     setLoading(true);
-    api.worksheets.list(assignment).then((assignments) => {
-      setRows(assignments);
+    API.worksheets.list(assignment).then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      }
+      setRows(message.data);
       setLoading(false);
     });
   };
@@ -19,13 +22,44 @@ export default function WorksheetsTable({ assignment }) {
     load();
   }, []);
 
-  const columns = React.useMemo(() => [
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 2,
-    },
-  ]);
+  const deleteWorksheet = React.useCallback((assignment, name) => () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete the worksheet " + name + "?"
+      )
+    ) {
+      API.worksheets.remove(name, assignment).then((message) => {
+        if (!message.success) {
+          alert(message.error);
+        }
+        load();
+      });
+    }
+  });
+
+  const columns = React.useMemo(
+    () => [
+      {
+        field: "name",
+        headerName: "Name",
+        flex: 2,
+      },
+      {
+        field: "actions",
+        type: "actions",
+        flex: 1,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<DeleteForeverIcon />}
+            label="Delete"
+            color="error"
+            onClick={deleteWorksheet(assignment, params.row.name)}
+          />,
+        ],
+      },
+    ],
+    [deleteWorksheet]
+  );
 
   return (
     <DataTable

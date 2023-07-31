@@ -3,21 +3,25 @@ import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import DataTable from "./DataTable";
-import { AuthoringAPI } from "@e2xauthoring/api";
+
+import API from "@e2xauthoring/api";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { getTemplateUrl } from "../../utils/urls";
 import NavLink from "../nav/NavLink";
 
 export default function TemplateTable() {
-  const api = new AuthoringAPI(window.base_url);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const load = () => {
     setLoading(true);
-    api.templates.list().then((templates) => {
-      setRows(templates);
-      setLoading(false);
+    API.templates.list().then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setRows(message.data);
+        setLoading(false);
+      }
     });
   };
 
@@ -31,7 +35,10 @@ export default function TemplateTable() {
         "Are you sure you want to delete the template " + template + "?"
       )
     ) {
-      api.templates.remove(template).then(() => {
+      API.templates.remove(template).then((message) => {
+        if (!message.success) {
+          alert(message.error);
+        }
         load();
       });
     }

@@ -9,7 +9,7 @@ import DataTable from "./DataTable";
 
 import { GridActionsCellItem } from "@mui/x-data-grid";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 import CommitTaskDialog from "../dialogs/CommitTaskDialog";
 import { getTaskUrl } from "../../utils/urls";
 import NavLink from "../nav/NavLink";
@@ -39,7 +39,6 @@ function GitStatus({ status }) {
 }
 
 export default function TaskTable(props) {
-  const api = new AuthoringAPI(window.base_url);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -47,9 +46,15 @@ export default function TaskTable(props) {
 
   const load = () => {
     setLoading(true);
-    api.tasks.list(props.pool).then((tasks) => {
-      setRows(tasks);
-      setLoading(false);
+    API.tasks.list(props.pool).then((message) => {
+      if (message.success) {
+        const tasks = message.data;
+        setRows(tasks);
+        setLoading(false);
+      } else {
+        alert(message.error);
+        setLoading(false);
+      }
     });
   };
 
@@ -64,7 +69,10 @@ export default function TaskTable(props) {
           "Are you sure you want to delete " + pool + ", " + task + "?"
         )
       ) {
-        api.tasks.remove(pool, task).then(() => {
+        API.tasks.remove(pool, task).then((message) => {
+          if (!message.success) {
+            alert(message.error);
+          }
           load();
         });
       }

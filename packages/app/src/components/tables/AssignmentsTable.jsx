@@ -4,7 +4,7 @@ import DataTable from "./DataTable";
 
 import format from "date-fns/format";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 import { Checkbox, Chip, FormControlLabel } from "@mui/material";
 import { getAssignmentUrl } from "../../utils/urls";
 import NavLink from "../nav/NavLink";
@@ -31,7 +31,6 @@ function AssignmentStatus({ status, numberOfSubmissions }) {
 }
 
 export default function AssignmentsTable(props) {
-  const api = new AuthoringAPI(window.base_url);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [showOnlyDraftAssignments, setShowOnlyDraftAssignments] =
@@ -47,9 +46,11 @@ export default function AssignmentsTable(props) {
     }
   };
 
+  console.log(API);
+
   const load = () => {
     setLoading(true);
-    api.assignments.list(false).then((assignments) => {
+    API.assignments.list(false).then((assignments) => {
       setRows(assignments);
       setLoading(false);
     });

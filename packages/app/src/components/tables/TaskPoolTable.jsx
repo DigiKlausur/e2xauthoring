@@ -4,14 +4,14 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import DataTable from "./DataTable";
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
+
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import TurnIntoRepoDialog from "../dialogs/TurnIntoRepoDialog";
 import { getPoolUrl } from "../../utils/urls";
 import NavLink from "../nav/NavLink";
 
 export default function TaskPoolTable() {
-  const api = new AuthoringAPI(window.base_url);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -19,9 +19,13 @@ export default function TaskPoolTable() {
 
   const load = () => {
     setLoading(true);
-    api.pools.list().then((pools) => {
-      setRows(pools);
-      setLoading(false);
+    API.pools.list().then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setRows(message.data);
+        setLoading(false);
+      }
     });
   };
 
@@ -35,7 +39,10 @@ export default function TaskPoolTable() {
         "Are you sure you want to delete the task pool " + pool + "?"
       )
     ) {
-      api.pools.remove(pool).then(() => {
+      API.pools.remove(pool).then((message) => {
+        if (!message.success) {
+          alert(message.error);
+        }
         load();
       });
     }
