@@ -82,7 +82,7 @@ class AddTaskHeader(Preprocessor):
         return nb
 
     def preprocess(self, resources):
-        if not resources["exercise_options"]["task-headers"]:
+        if not resources["exercise_options"].get("task-headers", False):
             return
         idx = 0
         for task_dict in resources["tasks"]:
