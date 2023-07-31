@@ -20,7 +20,6 @@ class WorksheetManager(BaseManager):
         return {"name": name, "assignment": assignment}
 
     def create(self, resources):
-        self.log.info(resources)
         self.converter.convert(resources)
 
     def remove(self, name: str, assignment: str):
