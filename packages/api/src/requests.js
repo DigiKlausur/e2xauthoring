@@ -1,0 +1,56 @@
+const getCookie = (name) => {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    for (let cookie of document.cookie.split(";")) {
+      if (cookie.trim().substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+};
+
+const baseSettings = {
+  credentials: "same-origin",
+  headers: {
+    "X-CSRFToken": getCookie("_xsrf"),
+  },
+};
+
+export const requests = {
+  get: async (url, params = undefined) => {
+    if (params !== undefined) {
+      url += "?" + new URLSearchParams(params).toString();
+    }
+    const response = await fetch(url);
+    return response.json();
+  },
+  post: async (url, data) => {
+    let settings = {
+      ...baseSettings,
+      method: "POST",
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(url, settings);
+    return response.json();
+  },
+  put: async (url, data) => {
+    let settings = {
+      ...baseSettings,
+      method: "PUT",
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(url, settings);
+    return response.json();
+  },
+  del: async (url, data) => {
+    let settings = {
+      ...baseSettings,
+      method: "DELETE",
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(url, settings);
+    return response.json();
+  },
+};
