@@ -25,6 +25,8 @@ class FillTemplate(Preprocessor):
         return replaced
 
     def preprocess(self, resources):
+        if resources.get("template", None) is None:
+            return
         template_path = os.path.join(
             resources["tmp_dir"],
             "template",

@@ -29,8 +29,9 @@ class MakeExercise(Preprocessor):
         if ("nbassignment" in cell.metadata) and ("type" in cell.metadata.nbassignment):
             return cell.metadata.nbassignment.type
 
-    def preprocess(self, resources):
-        exercise = self.new_notebook(resources)
+    def get_header_footer(self, resources):
+        if resources.get("template", None) is None:
+            return [], []
         template_path = os.path.join(
             resources["tmp_dir"],
             "template",
@@ -47,6 +48,12 @@ class MakeExercise(Preprocessor):
         footer = [
             cell for cell in template_nb.cells if self.get_cell_type(cell) == "footer"
         ]
+        return header, footer
+
+    def preprocess(self, resources):
+        exercise = self.new_notebook(resources)
+
+        header, footer = self.get_header_footer(resources)
 
         exercise.cells.extend(header)
 

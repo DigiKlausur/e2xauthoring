@@ -85,7 +85,8 @@ class CopyFiles(Preprocessor):
             task_path = os.path.join(resources["tmp_dir"], "tasks", task)
             self.copyfiles(task_path, file_folder, resources)
 
-        template_path = os.path.join(
-            resources["tmp_dir"], "template", resources["template"]
-        )
-        self.copyfiles(template_path, file_folder, resources)
+        if resources.get("template", None) is not None:
+            template_path = os.path.join(
+                resources["tmp_dir"], "template", resources["template"]
+            )
+            self.copyfiles(template_path, file_folder, resources)
