@@ -4,7 +4,8 @@ import Anser from "anser";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { useParams, useSearchParams } from "react-router-dom";
-import { AuthoringAPI } from "@e2xauthoring/api";
+
+import API from "@e2xauthoring/api";
 import { Paper } from "@mui/material";
 
 export default function FileDiff() {
@@ -13,14 +14,17 @@ export default function FileDiff() {
   const pool = params.pool;
   const task = params.task;
   const file = searchParams.get("file");
-  const api = new AuthoringAPI(window.base_url);
   const [loading, setLoading] = React.useState(true);
   const [diff, setDiff] = React.useState("");
 
   React.useEffect(() => {
-    api.tasks.diff(pool, task, file).then((res) => {
-      setDiff(res.diff);
-      setLoading(false);
+    API.tasks.git_diff(pool, task, file).then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setDiff(message.data.diff);
+        setLoading(false);
+      }
     });
   }, []);
 

@@ -1,4 +1,4 @@
-import { urlJoin } from "../api";
+import { urlJoin } from "@e2xauthoring/api";
 
 export const appUrl = urlJoin(window.base_url, "e2x", "authoring", "app");
 export const poolUrl = urlJoin(appUrl, "pools");

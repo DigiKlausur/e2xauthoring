@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 import { Stack } from "@mui/system";
 import {
   Checkbox,
@@ -15,13 +15,12 @@ export default function WorksheetOptions({
   worksheetOptions,
   setWorksheetOptions,
 }) {
-  const api = new AuthoringAPI(window.base_url);
   const [kernels, setKernels] = React.useState({});
   React.useEffect(() => {
     if (!worksheetOptions.hasOwnProperty("task-headers")) {
       setWorksheetOptions({ ...worksheetOptions, "task-headers": false });
     }
-    api.list_kernels().then((_kernels) => {
+    API.kernels.list().then((_kernels) => {
       setKernels(_kernels);
       if (
         !worksheetOptions.hasOwnProperty("kernel") &&

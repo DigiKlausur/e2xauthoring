@@ -2,7 +2,8 @@ import React from "react";
 
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
+
 import {
   Button,
   Checkbox,
@@ -130,13 +131,16 @@ function AddTasksDialog({ tasks, selectedTasks, setSelectedTasks }) {
 }
 
 export default function SelectTasks({ selectedTasks, setSelectedTasks }) {
-  const api = new AuthoringAPI(window.base_url);
   const [loading, setLoading] = React.useState(true);
   const [tasks, setTasks] = React.useState([]);
   React.useEffect(() => {
-    api.tasks.list().then((_tasks) => {
-      setTasks(_tasks);
-      setLoading(false);
+    API.tasks.list_all().then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setTasks(message.data);
+        setLoading(false);
+      }
     });
   }, []);
 

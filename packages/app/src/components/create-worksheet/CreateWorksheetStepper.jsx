@@ -12,7 +12,7 @@ import SelectTasks from "./SelectTasks";
 import SelectTemplate from "./SelectTemplate";
 import WorksheetOptions from "./WorksheetOptions";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 import { getNotebookUrl } from "../../utils/urls";
 
 const stepLabels = [
@@ -39,7 +39,6 @@ const steps = [
 ];
 
 export default function CreateWorksheetStepper({ assignment, name }) {
-  const api = new AuthoringAPI(window.base_url);
   const [activeStep, setActiveStep] = React.useState(0);
   const [template, setTemplate] = React.useState("No template");
   const [templateOptions, setTemplateOptions] = React.useState({});
@@ -47,19 +46,29 @@ export default function CreateWorksheetStepper({ assignment, name }) {
   const [worksheetOptions, setWorksheetOptions] = React.useState({});
 
   const handleSubmit = () => {
-    api.worksheets
-      .new(assignment, name, tasks, template, templateOptions, worksheetOptions)
-      .then((res) => {
-        if (res["success"]) {
-          setTimeout(
-            () =>
-              (window.location.href = getNotebookUrl(
-                `source/${assignment}/${name}.ipynb`
-              )),
-            500
-          );
-        }
-      });
+    const resources = {
+      assignment: assignment,
+      exercise: name,
+      template: template === "No template" ? null : template,
+      "template-options": templateOptions,
+      exercise_options: worksheetOptions,
+      tasks: tasks.map((_task) => {
+        return { ..._task, task: _task.name };
+      }),
+    };
+    API.worksheets.create(resources).then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setTimeout(
+          () =>
+            (window.location.href = getNotebookUrl(
+              `source/${assignment}/${name}.ipynb`
+            )),
+          500
+        );
+      }
+    });
   };
 
   const getTemplateButtonText = () => {

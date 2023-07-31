@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 
 function SetTemplateVariables({
   template,
@@ -78,26 +78,32 @@ export default function SelectTemplate({
   templateOptions,
   setTemplateOptions,
 }) {
-  const api = new AuthoringAPI(window.base_url);
   const [templates, setTemplates] = React.useState([]);
   const handleChange = (event) => {
     setTemplate(event.target.value);
     if (event.target.value !== "No template") {
-      api.templates.list_variables(event.target.value).then((variables) => {
-        setTemplateOptions(
-          Object.fromEntries(variables.map((variable) => [variable, ""]))
-        );
+      API.templates.list_variables(event.target.value).then((message) => {
+        if (!message.success) {
+          alert(message.error);
+        } else {
+          const variables = message.data;
+          setTemplateOptions(
+            Object.fromEntries(variables.map((variable) => [variable, ""]))
+          );
+        }
       });
     } else {
       setTemplateOptions({});
     }
   };
   React.useEffect(() => {
-    api.templates
-      .list()
-      .then((_templates) =>
-        setTemplates([{ name: "No template" }, ..._templates])
-      );
+    API.templates.list().then((message) => {
+      if (!message.success) {
+        alert(message.error);
+      } else {
+        setTemplates([{ name: "No template" }, ...message.data]);
+      }
+    });
   }, []);
 
   return (

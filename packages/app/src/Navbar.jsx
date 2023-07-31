@@ -10,7 +10,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import CreateIcon from "@mui/icons-material/Create";
 
-import { urlJoin } from "./api";
+import { urlJoin } from "@e2xauthoring/api";
 import { appUrl } from "./utils/urls";
 
 const MenuButton = (props) => {
