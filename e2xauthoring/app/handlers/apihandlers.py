@@ -1,5 +1,4 @@
 import json
-import os
 
 from e2xcore.handlers import E2xApiHandler
 from e2xcore.utils import urljoin
@@ -7,7 +6,6 @@ from jupyter_client.kernelspec import KernelSpecManager
 from nbgrader.server_extensions.formgrader.base import check_xsrf
 from tornado import web
 
-from ...converters import GenerateExercise
 from ...managers import (
     AssignmentManager,
     PresetManager,
@@ -16,22 +14,8 @@ from ...managers import (
     TemplateManager,
     WorksheetManager,
 )
-from ...utils import NotebookVariableExtractor
 from ...utils.gitutils import get_author, set_author
 from .base import ApiManageHandler
-
-
-class TemplateVariableHandler(E2xApiHandler):
-    @web.authenticated
-    @check_xsrf
-    def get(self):
-        template = self.get_argument("template")
-        variables = NotebookVariableExtractor().extract(
-            os.path.join(
-                self.url_prefix, "templates", template, "{}.ipynb".format(template)
-            )
-        )
-        self.write(json.dumps(variables))
 
 
 class KernelSpecHandler(E2xApiHandler):
@@ -39,14 +23,6 @@ class KernelSpecHandler(E2xApiHandler):
     @check_xsrf
     def get(self):
         self.write(json.dumps(KernelSpecManager().get_all_specs()))
-
-
-class GenerateExerciseHandler(E2xApiHandler):
-    @web.authenticated
-    @check_xsrf
-    def post(self):
-        GenerateExercise(coursedir=self.coursedir).convert(self.get_json_body())
-        self.write(dict(success=True))
 
 
 class GitAuthorHandler(E2xApiHandler):
@@ -148,8 +124,6 @@ default_handlers = [
             ),
         ),
     ),
-    (urljoin(api_url, "templates", "variables"), TemplateVariableHandler),
     (urljoin(api_url, "kernelspec"), KernelSpecHandler),
-    (urljoin(api_url, "generate_worksheet"), GenerateExerciseHandler),
     (urljoin(api_url, "git", "author"), GitAuthorHandler),
 ]
