@@ -61,6 +61,7 @@ class TaskManager(BaseManager):
 
     def git_diff(self, pool, task, file):
         path = os.path.join(self.base_path, pool, task, file)
+        assert os.path.exists(path), f"Path {path} does not exist"
         git_status = vcs_status(path)
         assert (
             git_status["repo"] is not None
