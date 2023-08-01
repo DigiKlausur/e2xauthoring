@@ -5,10 +5,10 @@ import { Stack } from "@mui/material";
 
 import { urlJoin } from "@e2xauthoring/api";
 
-import { FormDialogWithButton } from "./form-dialogs";
-import { FormikTextField } from "../forms/form-components";
-import { baseSchema } from "../forms/validation-schemas";
-import { getAssignmentUrl } from "../../utils/urls";
+import { FormDialogWithButton } from "../../dialogs/form-dialogs";
+import { FormikTextField } from "../../forms/form-components";
+import { baseSchema } from "../../forms/validation-schemas";
+import { getAssignmentUrl } from "../../../utils/urls";
 
 export default function NewWorksheetDialog({ assignment }) {
   const navigate = useNavigate();

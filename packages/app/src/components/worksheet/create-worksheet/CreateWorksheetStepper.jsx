@@ -13,7 +13,7 @@ import SelectTemplate from "./SelectTemplate";
 import WorksheetOptions from "./WorksheetOptions";
 
 import API from "@e2xauthoring/api";
-import { getNotebookUrl } from "../../utils/urls";
+import { getNotebookUrl } from "../../../utils/urls";
 
 const stepLabels = [
   "Name Worksheet",

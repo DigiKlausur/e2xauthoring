@@ -1,5 +1,5 @@
 import React from "react";
-import DataTable from "./DataTable";
+import DataTable from "../../tables/DataTable";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import API from "@e2xauthoring/api";

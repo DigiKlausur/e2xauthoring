@@ -7,10 +7,10 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import API from "@e2xauthoring/api";
 
-import { FormDialogWithButton } from "./form-dialogs";
-import { FormikTextField } from "../forms/form-components";
-import { baseSchema } from "../forms/validation-schemas";
-import { getAssignmentUrl } from "../../utils/urls";
+import { FormDialogWithButton } from "../../dialogs/form-dialogs";
+import { FormikTextField } from "../../forms/form-components";
+import { baseSchema } from "../../forms/validation-schemas";
+import { getAssignmentUrl } from "../../../utils/urls";
 import * as yup from "yup";
 
 export default function NewAssignmentDialog() {

@@ -1,13 +1,13 @@
 import React from "react";
 
-import DataTable from "./DataTable";
+import DataTable from "../../tables/DataTable";
 
 import format from "date-fns/format";
 
 import API from "@e2xauthoring/api";
 import { Checkbox, Chip, FormControlLabel } from "@mui/material";
-import { getAssignmentUrl } from "../../utils/urls";
-import NavLink from "../nav/NavLink";
+import { getAssignmentUrl } from "../../../utils/urls";
+import NavLink from "../../nav/NavLink";
 
 function AssignmentStatus({ status, numberOfSubmissions }) {
   const colors = {

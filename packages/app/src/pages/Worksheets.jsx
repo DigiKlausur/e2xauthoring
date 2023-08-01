@@ -3,10 +3,10 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import WorksheetsTable from "../components/tables/WorksheetsTable";
+import WorksheetsTable from "../components/worksheet/tables/WorksheetsTable";
 import { useParams } from "react-router-dom";
 import { assignmentsUrl } from "../utils/urls";
-import NewWorksheetDialog from "../components/dialogs/NewWorksheetDialog";
+import NewWorksheetDialog from "../components/worksheet/dialogs/NewWorksheetDialog";
 import { Breadcrumbs } from "@mui/material";
 import NavLink from "../components/nav/NavLink";
 

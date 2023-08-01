@@ -10,8 +10,8 @@ import {
   CircularProgress,
   FormControlLabel,
 } from "@mui/material";
-import SelectedTasksTable from "../tables/SelectedTasksTable";
-import BaseDialog from "../dialogs/BaseDialog";
+import SelectedTasksTable from "../../task/tables/SelectedTasksTable";
+import BaseDialog from "../../dialogs/BaseDialog";
 
 const taskInArray = (task, array) => {
   return array.find(
