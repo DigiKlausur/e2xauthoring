@@ -53,6 +53,7 @@ export default function WorksheetsTable({ assignment }) {
             key="del"
             icon={<DeleteForeverIcon />}
             label="Delete"
+            title="Delete Worksheet"
             color="error"
             onClick={deleteWorksheet(assignment, params.row.name)}
           />,

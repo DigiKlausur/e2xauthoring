@@ -3,6 +3,7 @@ import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DataTable from "../../tables/DataTable";
 import API from "@e2xauthoring/api";
 
@@ -11,12 +12,14 @@ import TurnIntoRepoDialog from "../dialogs/TurnIntoRepoDialog";
 import EditTaskPoolDialog from "../dialogs/EditTaskPoolDialog";
 import { getPoolUrl } from "../../../utils/urls";
 import NavLink from "../../nav/NavLink";
+import CopyTaskPoolDialog from "../dialogs/CopyTaskPoolDialog";
 
 export default function TaskPoolTable() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [openCopy, setOpenCopy] = React.useState(false);
   const [selectedPool, setSelectedPool] = React.useState("");
 
   const load = () => {
@@ -55,6 +58,11 @@ export default function TaskPoolTable() {
     setOpenEdit(true);
   });
 
+  const copyPool = React.useCallback((pool) => () => {
+    setSelectedPool(pool);
+    setOpenCopy(true);
+  });
+
   const turnPoolIntoRepo = React.useCallback((pool) => () => {
     setSelectedPool(pool);
     setOpen(true);
@@ -87,26 +95,37 @@ export default function TaskPoolTable() {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
-            key="del"
-            icon={<DeleteForeverIcon />}
-            label="Delete"
-            color="error"
-            onClick={deletePool(params.row.name)}
-          />,
-          <GridActionsCellItem
             key="edit"
             icon={<EditIcon />}
             label="Edit"
+            title="Rename Task Pool"
             color="primary"
             onClick={editPool(params.row.name)}
+          />,
+          <GridActionsCellItem
+            key="copy"
+            icon={<ContentCopyIcon />}
+            label="Copy"
+            title="Copy Task Pool"
+            color="primary"
+            onClick={copyPool(params.row.name)}
           />,
           <GridActionsCellItem
             key="repo"
             icon={<GitHubIcon />}
             label="Turn into repository"
+            title="Turn into repository"
             color="primary"
             disabled={params.row.is_repo}
             onClick={turnPoolIntoRepo(params.row.name)}
+          />,
+          <GridActionsCellItem
+            key="del"
+            icon={<DeleteForeverIcon />}
+            label="Delete"
+            title="Delete Task Pool"
+            color="error"
+            onClick={deletePool(params.row.name)}
           />,
         ],
       },
@@ -131,6 +150,12 @@ export default function TaskPoolTable() {
       <EditTaskPoolDialog
         open={openEdit}
         setOpen={setOpenEdit}
+        pool={selectedPool}
+        reload={load}
+      />
+      <CopyTaskPoolDialog
+        open={openCopy}
+        setOpen={setOpenCopy}
         pool={selectedPool}
         reload={load}
       />
