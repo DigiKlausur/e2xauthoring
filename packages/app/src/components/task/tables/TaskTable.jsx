@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DataTable from "../../tables/DataTable";
 
 import { GridActionsCellItem } from "@mui/x-data-grid";
@@ -16,6 +17,7 @@ import EditTaskDialog from "../dialogs/EditTaskDialog";
 import { getTaskUrl } from "../../../utils/urls";
 import NavLink from "../../nav/NavLink";
 import { Chip } from "@mui/material";
+import CopyTaskDialog from "../dialogs/CopyTaskDialog";
 
 function GitStatus({ status }) {
   let color = "primary";
@@ -45,6 +47,7 @@ export default function TaskTable(props) {
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [openCopy, setOpenCopy] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState({});
 
   const load = () => {
@@ -86,6 +89,11 @@ export default function TaskTable(props) {
   const editTask = React.useCallback((row) => () => {
     setSelectedRow(row);
     setOpenEdit(true);
+  });
+
+  const copyTask = React.useCallback((row) => () => {
+    setSelectedRow(row);
+    setOpenCopy(true);
   });
 
   const commitTask = React.useCallback(
@@ -138,26 +146,29 @@ export default function TaskTable(props) {
         flex: 1,
         getActions: (params) => [
           <GridActionsCellItem
-            key="del"
-            icon={<DeleteForeverIcon />}
-            color="error"
-            label="Delete"
-            onClick={deleteTask(params.row.pool, params.row.name)}
-          />,
-          <GridActionsCellItem
             key="edit"
             icon={<EditIcon />}
             label="Edit"
+            title="Rename Task"
             color="primary"
             onClick={editTask(params.row)}
+          />,
+          <GridActionsCellItem
+            key="copy"
+            icon={<ContentCopyIcon />}
+            label="Copy"
+            title="Copy Task"
+            color="primary"
+            onClick={copyTask(params.row)}
           />,
           <>
             {params.row.hasOwnProperty("git_status") ? (
               <GridActionsCellItem
+                title="Commit"
                 key="commit"
                 icon={<GitHubIcon />}
                 color="primary"
-                label="Commit"
+                label="Commit Task"
                 disabled={params.row.git_status.status === "unchanged"}
                 onClick={commitTask(params.row)}
               />
@@ -165,6 +176,14 @@ export default function TaskTable(props) {
               <></>
             )}
           </>,
+          <GridActionsCellItem
+            key="del"
+            icon={<DeleteForeverIcon />}
+            color="error"
+            label="Delete"
+            title="Delete Task"
+            onClick={deleteTask(params.row.pool, params.row.name)}
+          />,
         ],
       },
     ],
@@ -189,6 +208,12 @@ export default function TaskTable(props) {
       <EditTaskDialog
         open={openEdit}
         setOpen={setOpenEdit}
+        reload={load}
+        row={selectedRow}
+      />
+      <CopyTaskDialog
+        open={openCopy}
+        setOpen={setOpenCopy}
         reload={load}
         row={selectedRow}
       />
