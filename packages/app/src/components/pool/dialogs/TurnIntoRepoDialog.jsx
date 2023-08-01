@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 
 import API from "@e2xauthoring/api";
 
-import BaseDialog from "./BaseDialog";
+import BaseDialog from "../../dialogs/BaseDialog";
 
 export default function TurnIntoRepoDialog({ pool, open, setOpen, reload }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);

@@ -2,16 +2,20 @@ import React from "react";
 
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import DataTable from "./DataTable";
+import DataTable from "../../tables/DataTable";
+
+import EditTemplateDialog from "../dialogs/EditTemplateDialog";
 
 import API from "@e2xauthoring/api";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { getTemplateUrl } from "../../utils/urls";
-import NavLink from "../nav/NavLink";
+import { getTemplateUrl } from "../../../utils/urls";
+import NavLink from "../../nav/NavLink";
 
 export default function TemplateTable() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [selectedTemplate, setSelectedTemplate] = React.useState("");
 
   const load = () => {
     setLoading(true);
@@ -44,8 +48,9 @@ export default function TemplateTable() {
     }
   });
 
-  const editTemplate = React.useCallback((pool) => () => {
-    alert("Edit " + pool);
+  const editTemplate = React.useCallback((template) => () => {
+    setSelectedTemplate(template);
+    setOpenEdit(true);
   });
 
   const columns = React.useMemo(
@@ -86,11 +91,19 @@ export default function TemplateTable() {
   );
 
   return (
-    <DataTable
-      rows={rows}
-      loading={loading}
-      columns={columns}
-      getRowId={(row) => row.name}
-    />
+    <>
+      <DataTable
+        rows={rows}
+        loading={loading}
+        columns={columns}
+        getRowId={(row) => row.name}
+      />
+      <EditTemplateDialog
+        open={openEdit}
+        setOpen={setOpenEdit}
+        reload={load}
+        template={selectedTemplate}
+      />
+    </>
   );
 }

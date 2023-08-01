@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/material";
 
 import API from "@e2xauthoring/api";
-import { FormDialogWithButton } from "./form-dialogs";
-import { FormikTextField } from "../forms/form-components";
-import { baseSchema } from "../forms/validation-schemas";
-import { getTaskUrl } from "../../utils/urls";
+import { FormDialogWithButton } from "../../dialogs/form-dialogs";
+import { FormikTextField } from "../../forms/form-components";
+import { baseSchema } from "../../forms/validation-schemas";
+import { getTaskUrl } from "../../../utils/urls";
 
 export default function NewTaskDialog({ pool }) {
   const navigate = useNavigate();

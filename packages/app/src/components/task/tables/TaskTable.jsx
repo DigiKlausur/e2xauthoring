@@ -2,17 +2,19 @@ import React from "react";
 
 import GitHubIcon from "@mui/icons-material/GitHub";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import DataTable from "./DataTable";
+import DataTable from "../../tables/DataTable";
 
 import { GridActionsCellItem } from "@mui/x-data-grid";
 
 import API from "@e2xauthoring/api";
 import CommitTaskDialog from "../dialogs/CommitTaskDialog";
-import { getTaskUrl } from "../../utils/urls";
-import NavLink from "../nav/NavLink";
+import EditTaskDialog from "../dialogs/EditTaskDialog";
+import { getTaskUrl } from "../../../utils/urls";
+import NavLink from "../../nav/NavLink";
 import { Chip } from "@mui/material";
 
 function GitStatus({ status }) {
@@ -42,6 +44,7 @@ export default function TaskTable(props) {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState({});
 
   const load = () => {
@@ -79,6 +82,11 @@ export default function TaskTable(props) {
     },
     []
   );
+
+  const editTask = React.useCallback((row) => () => {
+    setSelectedRow(row);
+    setOpenEdit(true);
+  });
 
   const commitTask = React.useCallback(
     (row) => () => {
@@ -136,6 +144,13 @@ export default function TaskTable(props) {
             label="Delete"
             onClick={deleteTask(params.row.pool, params.row.name)}
           />,
+          <GridActionsCellItem
+            key="edit"
+            icon={<EditIcon />}
+            label="Edit"
+            color="primary"
+            onClick={editTask(params.row)}
+          />,
           <>
             {params.row.hasOwnProperty("git_status") ? (
               <GridActionsCellItem
@@ -168,6 +183,12 @@ export default function TaskTable(props) {
       <CommitTaskDialog
         open={open}
         setOpen={setOpen}
+        reload={load}
+        row={selectedRow}
+      />
+      <EditTaskDialog
+        open={openEdit}
+        setOpen={setOpenEdit}
         reload={load}
         row={selectedRow}
       />

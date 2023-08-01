@@ -3,18 +3,20 @@ import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import DataTable from "./DataTable";
+import DataTable from "../../tables/DataTable";
 import API from "@e2xauthoring/api";
 
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import TurnIntoRepoDialog from "../dialogs/TurnIntoRepoDialog";
-import { getPoolUrl } from "../../utils/urls";
-import NavLink from "../nav/NavLink";
+import EditTaskPoolDialog from "../dialogs/EditTaskPoolDialog";
+import { getPoolUrl } from "../../../utils/urls";
+import NavLink from "../../nav/NavLink";
 
 export default function TaskPoolTable() {
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
   const [selectedPool, setSelectedPool] = React.useState("");
 
   const load = () => {
@@ -49,7 +51,8 @@ export default function TaskPoolTable() {
   });
 
   const editPool = React.useCallback((pool) => () => {
-    alert("Edit " + pool);
+    setSelectedPool(pool);
+    setOpenEdit(true);
   });
 
   const turnPoolIntoRepo = React.useCallback((pool) => () => {
@@ -122,6 +125,12 @@ export default function TaskPoolTable() {
       <TurnIntoRepoDialog
         open={open}
         setOpen={setOpen}
+        pool={selectedPool}
+        reload={load}
+      />
+      <EditTaskPoolDialog
+        open={openEdit}
+        setOpen={setOpenEdit}
         pool={selectedPool}
         reload={load}
       />

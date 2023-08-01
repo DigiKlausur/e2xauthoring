@@ -46,8 +46,6 @@ export default function AssignmentsTable(props) {
     }
   };
 
-  console.log(API);
-
   const load = () => {
     setLoading(true);
     API.assignments.list(false).then((assignments) => {

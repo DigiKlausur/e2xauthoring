@@ -6,8 +6,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 import { useFormik } from "formik";
-import { FormDialogWithoutButton } from "./form-dialogs";
-import { FormikTextField } from "../forms/form-components";
+import { FormDialogWithoutButton } from "../../dialogs/form-dialogs";
+import { FormikTextField } from "../../forms/form-components";
 import * as yup from "yup";
 import {
   Table,
@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { getDiffUrl } from "../../utils/urls";
+import { getDiffUrl } from "../../../utils/urls";
 
 function GitStatusList({ git_status, pool, task }) {
   let rows = [];

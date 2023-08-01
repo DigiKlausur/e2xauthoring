@@ -1,14 +1,14 @@
 import React from "react";
 import { useFormik } from "formik";
-import { FormikTextField, FormikCheckbox } from "../forms/form-components";
-import { baseSchema } from "../forms/validation-schemas";
+import { FormikTextField, FormikCheckbox } from "../../forms/form-components";
+import { baseSchema } from "../../forms/validation-schemas";
 
 import API from "@e2xauthoring/api";
 import { useNavigate } from "react-router-dom";
-import { getPoolUrl } from "../../utils/urls";
+import { getPoolUrl } from "../../../utils/urls";
 import { Stack } from "@mui/material";
 
-import { FormDialogWithButton } from "./form-dialogs";
+import { FormDialogWithButton } from "../../dialogs/form-dialogs";
 
 export default function NewTaskPoolDialog() {
   const navigate = useNavigate();
