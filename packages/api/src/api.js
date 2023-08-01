@@ -5,6 +5,7 @@ const ROOT = window.base_url;
 const NBGRADER_API_ROOT = urlJoin(ROOT, "formgrader", "api");
 const AUTHORING_API_ROOT = urlJoin(ROOT, "e2x", "authoring", "api");
 
+const PRESET_API_ROOT = urlJoin(AUTHORING_API_ROOT, "presets");
 const POOL_API_ROOT = urlJoin(AUTHORING_API_ROOT, "pools");
 const TASK_API_ROOT = urlJoin(AUTHORING_API_ROOT, "tasks");
 const TEMPLATE_API_ROOT = urlJoin(AUTHORING_API_ROOT, "templates");
@@ -158,6 +159,22 @@ export const API = {
       requests.post(WORKSHEET_API_ROOT, {
         action: "create",
         resources: resources,
+      }),
+  },
+  presets: {
+    list_question_presets: () =>
+      requests.get(PRESET_API_ROOT, { action: "list_question_presets" }),
+    list_template_presets: () =>
+      requests.get(PRESET_API_ROOT, { action: "list_template_presets" }),
+    get_question_preset: (name) =>
+      requests.get(PRESET_API_ROOT, {
+        action: "get_question_preset",
+        preset_name: name,
+      }),
+    get_template_preset: (name) =>
+      requests.get(PRESET_API_ROOT, {
+        action: "get_template_preset",
+        preset_name: name,
       }),
   },
 };
