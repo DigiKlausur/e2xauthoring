@@ -3,8 +3,8 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import TemplateTable from "../components/tables/TemplateTable";
-import NewTemplateDialog from "../components/dialogs/NewTemplateDialog";
+import TemplateTable from "../components/template/tables/TemplateTable";
+import NewTemplateDialog from "../components/template/dialogs/NewTemplateDialog";
 import { Breadcrumbs } from "@mui/material";
 import CollapsibleAlert from "../components/alerts/CollapsibleAlert";
 

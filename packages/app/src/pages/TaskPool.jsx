@@ -3,10 +3,10 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import TaskTable from "../components/tables/TaskTable";
+import TaskTable from "../components/task/tables/TaskTable";
 import { useParams } from "react-router-dom";
 import { poolUrl } from "../utils/urls";
-import NewTaskDialog from "../components/dialogs/NewTaskDialog";
+import NewTaskDialog from "../components/task/dialogs/NewTaskDialog";
 import { Breadcrumbs } from "@mui/material";
 import NavLink from "../components/nav/NavLink";
 import CollapsibleAlert from "../components/alerts/CollapsibleAlert";

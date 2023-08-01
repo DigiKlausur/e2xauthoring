@@ -2,8 +2,8 @@ import React from "react";
 
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import TaskPoolTable from "../components/tables/TaskPoolTable";
-import NewTaskPoolDialog from "../components/dialogs/NewTaskPoolDialog";
+import TaskPoolTable from "../components/pool/tables/TaskPoolTable";
+import NewTaskPoolDialog from "../components/pool/dialogs/NewTaskPoolDialog";
 import { Breadcrumbs } from "@mui/material";
 import CollapsibleAlert from "../components/alerts/CollapsibleAlert";
 import GitAuthorNotSetAlert from "../components/alerts/GitAuthorNotSetAlert";
