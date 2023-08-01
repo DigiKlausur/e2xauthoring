@@ -13,8 +13,10 @@ import EditTaskPoolDialog from "../dialogs/EditTaskPoolDialog";
 import { getPoolUrl } from "../../../utils/urls";
 import NavLink from "../../nav/NavLink";
 import CopyTaskPoolDialog from "../dialogs/CopyTaskPoolDialog";
+import { useConfirm } from "material-ui-confirm";
 
 export default function TaskPoolTable() {
+  const confirm = useConfirm();
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -39,18 +41,17 @@ export default function TaskPoolTable() {
   }, []);
 
   const deletePool = React.useCallback((pool) => () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete the task pool " + pool + "?"
-      )
-    ) {
+    confirm({
+      description: `Are you sure you want to delete the task pool ${pool}?`,
+      title: "Delete Task Pool",
+    }).then(() => {
       API.pools.remove(pool).then((message) => {
         if (!message.success) {
           alert(message.error);
         }
         load();
       });
-    }
+    });
   });
 
   const editPool = React.useCallback((pool) => () => {

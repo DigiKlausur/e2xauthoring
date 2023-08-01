@@ -3,8 +3,10 @@ import DataTable from "../../tables/DataTable";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import API from "@e2xauthoring/api";
+import { useConfirm } from "material-ui-confirm";
 
 export default function WorksheetsTable({ assignment }) {
+  const confirm = useConfirm();
   const [loading, setLoading] = React.useState(true);
   const [rows, setRows] = React.useState([]);
   const load = () => {
@@ -23,18 +25,17 @@ export default function WorksheetsTable({ assignment }) {
   }, []);
 
   const deleteWorksheet = React.useCallback((assignment, name) => () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete the worksheet " + name + "?"
-      )
-    ) {
+    confirm({
+      description: `Are you sure you want to delete the worksheet ${name} from assignment ${assignment}?`,
+      title: "Delete Worksheet",
+    }).then(() => {
       API.worksheets.remove(name, assignment).then((message) => {
         if (!message.success) {
           alert(message.error);
         }
         load();
       });
-    }
+    });
   });
 
   const columns = React.useMemo(

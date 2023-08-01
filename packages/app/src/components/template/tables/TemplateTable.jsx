@@ -12,8 +12,10 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import { getTemplateUrl } from "../../../utils/urls";
 import NavLink from "../../nav/NavLink";
 import CopyTemplateDialog from "../dialogs/CopyTemplateDialog";
+import { useConfirm } from "material-ui-confirm";
 
 export default function TemplateTable() {
+  const confirm = useConfirm();
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [openEdit, setOpenEdit] = React.useState(false);
@@ -37,18 +39,17 @@ export default function TemplateTable() {
   }, []);
 
   const deleteTemplate = React.useCallback((template) => () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete the template " + template + "?"
-      )
-    ) {
+    confirm({
+      description: `Are you sure you want to delete the template ${template}?`,
+      title: "Delete Template",
+    }).then(() => {
       API.templates.remove(template).then((message) => {
         if (!message.success) {
           alert(message.error);
         }
         load();
       });
-    }
+    });
   });
 
   const editTemplate = React.useCallback((template) => () => {

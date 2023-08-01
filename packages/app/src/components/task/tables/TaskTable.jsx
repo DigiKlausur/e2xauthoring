@@ -18,6 +18,7 @@ import { getTaskUrl } from "../../../utils/urls";
 import NavLink from "../../nav/NavLink";
 import { Chip } from "@mui/material";
 import CopyTaskDialog from "../dialogs/CopyTaskDialog";
+import { useConfirm } from "material-ui-confirm";
 
 function GitStatus({ status }) {
   let color = "primary";
@@ -43,6 +44,7 @@ function GitStatus({ status }) {
 }
 
 export default function TaskTable(props) {
+  const confirm = useConfirm();
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -70,18 +72,17 @@ export default function TaskTable(props) {
 
   const deleteTask = React.useCallback(
     (pool, task) => () => {
-      if (
-        window.confirm(
-          "Are you sure you want to delete " + pool + ", " + task + "?"
-        )
-      ) {
+      confirm({
+        description: `Are you sure you want to delete the task ${task} from pool ${pool}?`,
+        title: "Delete Task",
+      }).then(() => {
         API.tasks.remove(pool, task).then((message) => {
           if (!message.success) {
             alert(message.error);
           }
           load();
         });
-      }
+      });
     },
     []
   );
