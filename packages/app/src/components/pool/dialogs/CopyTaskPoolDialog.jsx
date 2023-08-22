@@ -11,6 +11,7 @@ import { FormikTextField } from "../../forms/form-components";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { getPoolUrl } from "../../../utils/urls";
+import { nameRegex } from "../../../utils/validator";
 
 export default function CopyTaskPoolDialog({ open, setOpen, reload, pool }) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function CopyTaskPoolDialog({ open, setOpen, reload, pool }) {
         .required()
         .min(3, "Name should have at least 3 characters")
         .matches(
-          /^[A-Za-z\d]+[\w-]*$/,
+          nameRegex,
           'Name can only consist of letters, digits, "-" and "_"!'
         ),
     }),

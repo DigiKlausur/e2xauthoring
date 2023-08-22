@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { FormDialogWithoutButton } from "../../dialogs/form-dialogs";
 import { FormikTextField } from "../../forms/form-components";
+import { nameRegex } from "../../../utils/validator";
 import * as yup from "yup";
 import { getTaskUrl } from "../../../utils/urls";
 
@@ -24,7 +25,7 @@ export default function CopyTaskDialog({ open, setOpen, reload, row }) {
         .required()
         .min(3, "Name should have at least 3 characters")
         .matches(
-          /^[A-Za-z\d]+[\w-]*$/,
+          nameRegex,
           'Name can only consist of letters, digits, "-" and "_"!'
         ),
     }),

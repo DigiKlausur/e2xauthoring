@@ -10,6 +10,7 @@ import { getTemplateUrl } from "../../../utils/urls";
 import { useFormik } from "formik";
 import { FormDialogWithoutButton } from "../../dialogs/form-dialogs";
 import { FormikTextField } from "../../forms/form-components";
+import { nameRegex } from "../../../utils/validator";
 import * as yup from "yup";
 
 export default function CopyTemplateDialog({
@@ -29,7 +30,7 @@ export default function CopyTemplateDialog({
         .required()
         .min(3, "Name should have at least 3 characters")
         .matches(
-          /^[A-Za-z\d]+[\w-]*$/,
+          nameRegex,
           'Name can only consist of letters, digits, "-" and "_"!'
         ),
     }),

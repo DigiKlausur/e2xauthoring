@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import { useFormik } from "formik";
 import { FormDialogWithoutButton } from "../../dialogs/form-dialogs";
 import { FormikTextField } from "../../forms/form-components";
+import { nameRegex } from "../../../utils/validator";
 import * as yup from "yup";
 
 export default function EditTemplateDialog({
@@ -26,7 +27,7 @@ export default function EditTemplateDialog({
         .required()
         .min(3, "Name should have at least 3 characters")
         .matches(
-          /^[A-Za-z\d]+[\w-]*$/,
+          nameRegex,
           'Name can only consist of letters, digits, "-" and "_"!'
         ),
     }),
