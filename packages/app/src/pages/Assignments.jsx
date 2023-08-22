@@ -4,8 +4,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 
-import AssignmentsTable from "../components/tables/AssignmentsTable";
-import NewAssignmentDialog from "../components/dialogs/NewAssignmentDialog";
+import AssignmentsTable from "../components/assignment/tables/AssignmentsTable";
+import NewAssignmentDialog from "../components/assignment/dialogs/NewAssignmentDialog";
 import CollapsibleAlert from "../components/alerts/CollapsibleAlert";
 
 export default function Assignments() {

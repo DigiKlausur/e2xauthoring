@@ -1,12 +1,12 @@
 import React from "react";
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 import SetGitAuthorDialog from "../dialogs/SetGitAuthorDialog";
 import { Alert, AlertTitle } from "@mui/material";
 
 export default function GitAuthorNotSetAlert() {
   const [authorIsSet, setAuthorIsSet] = React.useState(true);
   React.useEffect(() => {
-    new AuthoringAPI(window.base_url).git.getAuthor().then((author) => {
+    API.git_author.get().then((author) => {
       setAuthorIsSet(!!author);
     });
   }, []);

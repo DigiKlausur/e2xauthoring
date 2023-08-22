@@ -4,13 +4,12 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { Button, Stack } from "@mui/material";
 
-import { AuthoringAPI } from "@e2xauthoring/api";
+import API from "@e2xauthoring/api";
 
 import { FormDialogWithoutButton } from "./form-dialogs";
 import { FormikTextField } from "../forms/form-components";
 
 export default function SetGitAuthorDialog() {
-  const api = new AuthoringAPI(window.base_url);
   const [open, setOpen] = React.useState(false);
   const formik = useFormik({
     initialValues: {
@@ -25,7 +24,7 @@ export default function SetGitAuthorDialog() {
       email: yup.string().email().required(),
     }),
     onSubmit: (values) => {
-      api.git.setAuthor(values.name, values.email).then((res) => {
+      API.git.setAuthor(values.name, values.email).then((res) => {
         if (!res["success"]) {
           alert(res["message"]);
         } else {

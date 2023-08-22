@@ -1,7 +1,7 @@
 import React from "react";
 
 import Typography from "@mui/material/Typography";
-import CreateWorksheetStepper from "../components/create-worksheet/CreateWorksheetStepper";
+import CreateWorksheetStepper from "../components/worksheet/create-worksheet/CreateWorksheetStepper";
 import { useParams } from "react-router-dom";
 import { assignmentsUrl, getAssignmentUrl } from "../utils/urls";
 import { Breadcrumbs } from "@mui/material";
