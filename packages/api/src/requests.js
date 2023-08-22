@@ -2,7 +2,7 @@ const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
     for (let cookie of document.cookie.split(";")) {
-      if (cookie.trim().substring(0, name.length + 1) === name + "=") {
+      if (cookie.trim().startsWith(`${name}=`)) {
         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
         break;
       }
