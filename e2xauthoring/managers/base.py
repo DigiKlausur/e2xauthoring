@@ -14,7 +14,7 @@ class BaseManager(LoggingConfigurable):
 
     def __init__(self, coursedir: CourseDirectory) -> None:
         self.coursedir = coursedir
-        self.__pattern = re.compile(r"^\w+[\w\s]*\w+$")
+        self.__pattern = re.compile(r"^[A-Za-z\d]+[\w-]*$")
 
     @property
     def base_path(self):
