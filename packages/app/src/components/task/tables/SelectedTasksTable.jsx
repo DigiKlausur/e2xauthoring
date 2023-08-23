@@ -79,7 +79,7 @@ export default function SelectedTasksTable({
             <TableRow key={task.name}>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.pool}</TableCell>
-              <TableCell>{task.questions}</TableCell>
+              <TableCell>{task.n_questions}</TableCell>
               <TableCell>{task.points}</TableCell>
               <TableCell>
                 <IconButton onClick={handleMoveBottom(task)}>

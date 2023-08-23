@@ -80,7 +80,7 @@ export default function TaskPoolTable() {
         ),
       },
       {
-        field: "tasks",
+        field: "n_tasks",
         headerName: "# Tasks",
         flex: 1,
       },
