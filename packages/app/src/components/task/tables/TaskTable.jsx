@@ -125,7 +125,7 @@ export default function TaskTable(props) {
         ),
       },
       {
-        field: "questions",
+        field: "n_questions",
         headerName: "# Questions",
         flex: 1,
       },
