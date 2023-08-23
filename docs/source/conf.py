@@ -9,7 +9,7 @@
 project = "e2xauthoring"
 copyright = "2023, Tim Metzler"
 author = "Tim Metzler"
-release = "0.2.0"
+release = "0.2.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
