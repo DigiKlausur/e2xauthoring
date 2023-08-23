@@ -75,7 +75,6 @@ src = "e2xauthoring/__version__.py"
 
 [[tool.tbump.file]]
 src = "docs/source/conf.py"
-search = "release\\s*=\\s*'{current_version}'"
 
 [[tool.tbump.file]]
 src = "package.json"
