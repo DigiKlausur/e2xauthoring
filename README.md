@@ -1,5 +1,5 @@
 # e2xauthoring
-[![PyPi](https://img.shields.io/pypi/v/e2xauthoring)](https://pypi.org/project/e2xauthoring) [![Docs](https://img.shields.io/readthedocs/e2xauthoring)](https://e2xauthoring.readthedocs.io) 
+[![PyPi](https://img.shields.io/pypi/v/e2xauthoring)](https://pypi.org/project/e2xauthoring) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Docs](https://img.shields.io/readthedocs/e2xauthoring)](https://e2xauthoring.readthedocs.io) 
 ---
 
 e2xauthoring is an add-on for e2xgrader that adds functionality for authoring assignments.
