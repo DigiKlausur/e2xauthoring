@@ -116,6 +116,7 @@ export default function TemplateTable() {
         loading={loading}
         columns={columns}
         getRowId={(row) => row.name}
+        initialSort={{ field: "name", sort: "asc" }}
       />
       <EditTemplateDialog
         open={openEdit}

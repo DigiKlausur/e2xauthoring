@@ -70,6 +70,7 @@ export default function WorksheetsTable({ assignment }) {
       loading={loading}
       columns={columns}
       getRowId={(row) => `${row.assignment}-${row.name}`}
+      initialSort={{ field: "name", sort: "asc" }}
     />
   );
 }

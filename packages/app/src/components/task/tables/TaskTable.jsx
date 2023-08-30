@@ -199,6 +199,7 @@ export default function TaskTable(props) {
         columns={columns}
         loading={loading}
         getRowId={(row) => row.name}
+        initialSort={{ field: "name", sort: "asc" }}
       />
       <CommitTaskDialog
         open={open}

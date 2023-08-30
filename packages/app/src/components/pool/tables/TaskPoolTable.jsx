@@ -141,6 +141,7 @@ export default function TaskPoolTable() {
         loading={loading}
         columns={columns}
         getRowId={(row) => row.name}
+        initialSort={{ field: "name", sort: "asc" }}
       />
       <TurnIntoRepoDialog
         open={open}
