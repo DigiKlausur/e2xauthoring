@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import SettingsContext from "../../settings/SettingsContext";
 
 export default function DataTable(props) {
-  const [pageSize, setPageSize] = React.useState(10);
+  const { settings, setSettings } = useContext(SettingsContext);
+
+  const getInitialState = (props) => {
+    if (!props.initialSort) {
+      return {};
+    }
+    return {
+      sorting: {
+        sortModel: [props.initialSort],
+      },
+    };
+  };
 
   return (
     <DataGrid
@@ -10,9 +22,13 @@ export default function DataTable(props) {
       density="compact"
       autoHeight
       pagination
-      pageSize={pageSize}
+      pageSize={settings.pageSize}
       rowsPerPageOptions={[5, 10, 20, 50, 100]}
-      onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+      onPageSizeChange={(newPageSize) =>
+        setSettings({ ...settings, pageSize: newPageSize })
+      }
+      sortingOrder={["asc", "desc", null]}
+      initialState={getInitialState(props)}
       disableSelectionOnClick
       disableColumnFilter
       disableColumnSelector
