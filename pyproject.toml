@@ -26,6 +26,9 @@ dynamic = ["version"]
 
 [project.urls]
 Source = "https://github.com/Digiklausur/e2xauthoring"
+Documentation = "https://e2xauthoring.readthedocs.io/en/latest/"
+Issues = "https://github.com/Digiklausur/e2xauthoring/issues"
+Pypi = "https://github.com/Digiklausur/e2xauthoring"
 
 [project.optional-dependencies]
 dev = [
