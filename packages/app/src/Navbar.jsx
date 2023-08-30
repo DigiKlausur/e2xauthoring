@@ -3,7 +3,7 @@ import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -15,6 +15,9 @@ import { appUrl } from "./utils/urls";
 
 const MenuButton = (props) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const url = urlJoin(appUrl, props.link);
+  const selected = pathname.includes(url);
 
   return (
     <Button
@@ -23,6 +26,10 @@ const MenuButton = (props) => {
       disableElevation
       onClick={() => {
         navigate(urlJoin(appUrl, props.link));
+      }}
+      sx={{
+        border: selected ? 1 : 0,
+        borderColor: "white",
       }}
     >
       {props.label}
@@ -38,11 +45,6 @@ export default function Navbar() {
           <Typography variant="h6" color="inherit">
             <Stack direction="row" spacing={2}>
               <MenuButton
-                startIcon={<AssignmentIcon />}
-                label="Assignments"
-                link="assignments"
-              />
-              <MenuButton
                 startIcon={<AssessmentIcon />}
                 label="Tasks"
                 link="pools"
@@ -51,6 +53,11 @@ export default function Navbar() {
                 startIcon={<CreateIcon />}
                 label="Templates"
                 link="templates"
+              />
+              <MenuButton
+                startIcon={<AssignmentIcon />}
+                label="Assignments"
+                link="assignments"
               />
             </Stack>
           </Typography>

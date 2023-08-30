@@ -126,6 +126,7 @@ export default function AssignmentsTable(props) {
         columns={columns}
         loading={loading}
         getRowId={(row) => row.name}
+        initialSort={{ field: "name", sort: "asc" }}
       />
     </>
   );
