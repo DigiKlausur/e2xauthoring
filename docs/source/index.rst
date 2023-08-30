@@ -50,17 +50,13 @@ To get a better idea of how e2xauthoring looks like, here are some screenshots.
    :maxdepth: 2
    :caption: User Documentation:
 
-   user_docs/task
-   user_docs/pool
-   user_docs/questions
-   user_docs/template
-   user_docs/worksheet
+   user_docs/index
 
 .. toctree::
    :maxdepth: 2
    :caption: Setup:
 
-   setup/installation
+   setup/index
 
 
 
