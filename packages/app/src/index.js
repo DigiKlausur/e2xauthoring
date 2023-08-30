@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.querySelector("#root")).render(
         <Route path="pools/:pool" element={<TaskPool />} />
         <Route path="pools/:pool/:task" element={<Task />} />
         <Route path="diff/:pool/:task" element={<FileDiff />} />
-        <Route index element={<Navigate to="assignments" replace />} />
+        <Route index element={<Navigate to="pools" replace />} />
       </Route>
     </Routes>
   </BrowserRouter>
