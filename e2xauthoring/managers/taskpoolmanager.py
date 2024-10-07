@@ -61,13 +61,25 @@ class TaskPoolManager(BaseManager):
         if not os.path.exists(self.base_path):
             self.log.warning("The pool directory does not exist.")
             os.makedirs(self.base_path, exist_ok=True)
+
         pool_dirs = await asyncio.to_thread(self.listdir, self.base_path)
         tasks = []
+        coroutines = []
+
         for pool_dir in pool_dirs:
-            n_tasks = await self.__get_n_tasks(pool_dir)
-            is_repo = await asyncio.to_thread(
-                is_version_controlled, os.path.join(self.base_path, pool_dir)
+            coroutines.append(self.__get_n_tasks(pool_dir))
+            coroutines.append(
+                asyncio.to_thread(
+                    is_version_controlled, os.path.join(self.base_path, pool_dir)
+                )
             )
+
+        results = await asyncio.gather(*coroutines)
+
+        for i, pool_dir in enumerate(pool_dirs):
+            n_tasks = results[i * 2]
+            is_repo = results[i * 2 + 1]
+
             tasks.append(
                 TaskPool(
                     name=pool_dir,
@@ -75,4 +87,5 @@ class TaskPoolManager(BaseManager):
                     is_repo=is_repo,
                 )
             )
+
         return tasks
