@@ -128,12 +128,23 @@ class TaskManager(BaseManager):
         tasks = []
         path = os.path.join(self.base_path, pool)
         assert os.path.exists(path), f"No pool with the name {pool} exists."
-        for task_dir in self.listdir(os.path.join(self.base_path, pool)):
-            points, n_questions = await self.__get_task_info(task_dir, pool)
-            git_status = await asyncio.to_thread(self.git_status, pool, task_dir)
+
+        coroutines = []
+        task_dirs = self.listdir(os.path.join(self.base_path, pool))
+
+        for task_dir in task_dirs:
+            coroutines.append(self.__get_task_info(task_dir, pool))
+            coroutines.append(asyncio.to_thread(self.git_status, pool, task_dir))
+
+        results = await asyncio.gather(*coroutines)
+
+        for i, task_dir in enumerate(task_dirs):
+            points, n_questions = results[i * 2]
+            git_status = results[i * 2 + 1]
 
             if "repo" in git_status:
                 del git_status["repo"]
+
             tasks.append(
                 Task(
                     name=task_dir,
@@ -143,15 +154,24 @@ class TaskManager(BaseManager):
                     git_status=git_status,
                 )
             )
+
         return tasks
 
     async def list_all(self):
         pool_manager = TaskPoolManager(self.coursedir)
         tasks = []
         pool_list = await pool_manager.list()
-        for pool in pool_list:
-            pool_tasks = await self.list(pool.name)
+
+        # Collect all coroutines
+        coroutines = [self.list(pool.name) for pool in pool_list]
+
+        # Run them concurrently
+        results = await asyncio.gather(*coroutines)
+
+        # Flatten the list of results
+        for pool_tasks in results:
             tasks.extend(pool_tasks)
+
         return tasks
 
     def copy(self, old_name: str, new_name: str, pool: str = ""):
