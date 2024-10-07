@@ -148,7 +148,8 @@ class TaskManager(BaseManager):
     async def list_all(self):
         pool_manager = TaskPoolManager(self.coursedir)
         tasks = []
-        for pool in pool_manager.list():
+        pool_list = await pool_manager.list()
+        for pool in pool_list:
             pool_tasks = await self.list(pool.name)
             tasks.extend(pool_tasks)
         return tasks
