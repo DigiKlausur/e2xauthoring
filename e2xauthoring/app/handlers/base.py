@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 from typing import List
 
@@ -17,14 +18,26 @@ def status_msg(method):
         method: The method to decorate
     """
 
-    def wrapper(*args, **kwargs):
-        try:
-            res = method(*args, **kwargs)
-            return SuccessMessage(data=res)
-        except Exception as e:
-            return ErrorMessage(error=getattr(e, "message", str(e)))
+    if asyncio.iscoroutinefunction(method):
 
-    return wrapper
+        async def async_wrapper(*args, **kwargs):
+            try:
+                res = await method(*args, **kwargs)
+                return SuccessMessage(data=res)
+            except Exception as e:
+                return ErrorMessage(error=getattr(e, "message", str(e)))
+
+        return async_wrapper
+    else:
+
+        def wrapper(*args, **kwargs):
+            try:
+                res = method(*args, **kwargs)
+                return SuccessMessage(data=res)
+            except Exception as e:
+                return ErrorMessage(error=getattr(e, "message", str(e)))
+
+        return wrapper
 
 
 class ApiManageHandler(E2xApiHandler):
@@ -59,16 +72,21 @@ class ApiManageHandler(E2xApiHandler):
             params[arg] = argument
         return params
 
-    def perform_action(self, action: str, allowed_actions: List[str]):
+    async def perform_action(self, action: str, allowed_actions: List[str]):
         assert (
             action is not None and action in allowed_actions
         ), f"Action {action} is not a valid action."
         method = getattr(self.__manager, action)
         arguments = self.extract_arguments(method)
-        return method(**arguments)
+
+        # If the method is async, await it, otherwise call it synchronously
+        if inspect.iscoroutinefunction(method):
+            return await method(**arguments)
+        else:
+            return method(**arguments)
 
     @status_msg
-    def handle_request(self, request_type: str):
+    async def handle_request(self, request_type: str):
         action = self.get_argument(
             "action", default=None  # self.__allowed_actions[request_type]["default"]
         )
@@ -77,26 +95,30 @@ class ApiManageHandler(E2xApiHandler):
                 "action", self.__allowed_actions[request_type]["default"]
             )
 
-        return self.perform_action(
+        return await self.perform_action(
             action, self.__allowed_actions[request_type]["actions"]
         )
 
     @web.authenticated
     @check_xsrf
-    def get(self):
-        self.finish(self.handle_request("get").json())
+    async def get(self):
+        result = await self.handle_request("get")
+        self.finish(result.json())
 
     @web.authenticated
     @check_xsrf
-    def delete(self):
-        self.finish(self.handle_request("delete").json())
+    async def delete(self):
+        result = await self.handle_request("delete")
+        self.finish(result.json())
 
     @web.authenticated
     @check_xsrf
-    def put(self):
-        self.finish(self.handle_request("put").json())
+    async def put(self):
+        result = await self.handle_request("put")
+        self.finish(result.json())
 
     @web.authenticated
     @check_xsrf
-    def post(self):
-        self.finish(self.handle_request("post").json())
+    async def post(self):
+        result = await self.handle_request("post")
+        self.finish(result.json())

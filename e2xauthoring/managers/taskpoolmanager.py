@@ -1,3 +1,4 @@
+import asyncio
 import os
 import shutil
 
@@ -13,14 +14,16 @@ class TaskPoolManager(BaseManager):
         "pools", help="The relative directory where the pools are stored"
     )
 
-    def __get_n_tasks(self, name) -> int:
-        return len(
-            [
-                d
-                for d in os.listdir(os.path.join(self.base_path, name))
-                if not d.startswith(".")
-            ]
-        )
+    async def __get_n_tasks(self, name) -> int:
+        base_path = os.path.join(self.base_path, name)
+
+        # Offload os.listdir to a thread
+        directory_list = await asyncio.to_thread(os.listdir, base_path)
+
+        # Filter out directories that start with a dot ('.')
+        task_count = len([d for d in directory_list if not d.startswith(".")])
+
+        return task_count
 
     def turn_into_repository(self, pool):
         path = os.path.join(self.base_path, pool)
@@ -54,13 +57,22 @@ class TaskPoolManager(BaseManager):
         assert os.path.exists(path), f"The task pool {name} does not exist"
         shutil.rmtree(path)
 
-    def list(self):
-        assert os.path.exists(self.base_path), "Pool directory does not exist."
-        return [
-            TaskPool(
-                name=pool_dir,
-                n_tasks=self.__get_n_tasks(pool_dir),
-                is_repo=is_version_controlled(os.path.join(self.base_path, pool_dir)),
+    async def list(self):
+        if not os.path.exists(self.base_path):
+            self.log.warning("The pool directory does not exist.")
+            os.makedirs(self.base_path, exist_ok=True)
+        pool_dirs = await asyncio.to_thread(self.listdir, self.base_path)
+        tasks = []
+        for pool_dir in pool_dirs:
+            n_tasks = await self.__get_n_tasks(pool_dir)
+            is_repo = await asyncio.to_thread(
+                is_version_controlled, os.path.join(self.base_path, pool_dir)
             )
-            for pool_dir in self.listdir(self.base_path)
-        ]
+            tasks.append(
+                TaskPool(
+                    name=pool_dir,
+                    n_tasks=n_tasks,
+                    is_repo=is_repo,
+                )
+            )
+        return tasks
