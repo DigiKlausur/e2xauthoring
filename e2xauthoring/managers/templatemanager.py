@@ -49,7 +49,9 @@ class TemplateManager(BaseManager):
         shutil.rmtree(path)
 
     def list(self):
-        assert os.path.exists(self.base_path), "Template directory not found."
+        if not os.path.exists(self.base_path):
+            self.log.warning("The template directory does not exist.")
+            os.makedirs(self.base_path, exist_ok=True)
         templates = [
             Template(name=template_dir) for template_dir in self.listdir(self.base_path)
         ]

@@ -55,7 +55,9 @@ class TaskPoolManager(BaseManager):
         shutil.rmtree(path)
 
     def list(self):
-        assert os.path.exists(self.base_path), "Pool directory does not exist."
+        if not os.path.exists(self.base_path):
+            self.log.warning("The pool directory does not exist.")
+            os.makedirs(self.base_path, exist_ok=True)
         return [
             TaskPool(
                 name=pool_dir,
