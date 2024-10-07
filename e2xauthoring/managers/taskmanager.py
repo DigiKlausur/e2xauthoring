@@ -1,3 +1,4 @@
+import asyncio
 import os
 import shutil
 
@@ -17,7 +18,7 @@ class TaskManager(BaseManager):
         "pools", help="The relative directory where the pools are stored"
     )
 
-    def __get_task_info(self, task, pool):
+    async def __get_task_info(self, task, pool):
         base_path = os.path.join(self.base_path, pool)
         notebooks = [
             file
@@ -29,7 +30,11 @@ class TaskManager(BaseManager):
         questions = 0
 
         for notebook in notebooks:
-            nb = nbformat.read(os.path.join(base_path, task, notebook), as_version=4)
+            nb = await asyncio.to_thread(
+                nbformat.read,
+                os.path.join(base_path, task, notebook),
+                as_version=nbformat.NO_CONVERT,
+            )
             for cell in nb.cells:
                 if "nbgrader" in cell.metadata and cell.metadata.nbgrader.grade:
                     points += cell.metadata.nbgrader.points
@@ -74,11 +79,12 @@ class TaskManager(BaseManager):
             .replace("\n", "<br/>"),
         )
 
-    def get(self, pool: str, name: str):
+    async def get(self, pool: str, name: str):
         path = os.path.join(self.base_path, pool, name)
         assert os.path.exists(path), "The task does not exists"
-        points, n_questions = self.__get_task_info(name, pool)
-        git_status = self.git_status(pool, name)
+        points, n_questions = await self.__get_task_info(name, pool)
+        git_status = await asyncio.to_thread(self.git_status, pool, name)
+
         if "repo" in git_status:
             del git_status["repo"]
         return Task(
@@ -118,13 +124,14 @@ class TaskManager(BaseManager):
         ), f"No task with the name {name} from pool {pool} exists."
         shutil.rmtree(path)
 
-    def list(self, pool):
+    async def list(self, pool):
         tasks = []
         path = os.path.join(self.base_path, pool)
         assert os.path.exists(path), f"No pool with the name {pool} exists."
         for task_dir in self.listdir(os.path.join(self.base_path, pool)):
-            points, n_questions = self.__get_task_info(task_dir, pool)
-            git_status = self.git_status(pool, task_dir)
+            points, n_questions = await self.__get_task_info(task_dir, pool)
+            git_status = await asyncio.to_thread(self.git_status, pool, task_dir)
+
             if "repo" in git_status:
                 del git_status["repo"]
             tasks.append(
@@ -138,11 +145,12 @@ class TaskManager(BaseManager):
             )
         return tasks
 
-    def list_all(self):
+    async def list_all(self):
         pool_manager = TaskPoolManager(self.coursedir)
         tasks = []
         for pool in pool_manager.list():
-            tasks.extend(self.list(pool.name))
+            pool_tasks = await self.list(pool.name)
+            tasks.extend(pool_tasks)
         return tasks
 
     def copy(self, old_name: str, new_name: str, pool: str = ""):
