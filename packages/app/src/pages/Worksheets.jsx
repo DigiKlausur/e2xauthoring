@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
@@ -15,6 +15,9 @@ export default function Worksheets() {
   const assignment = params.assignment;
   return (
     <>
+      <Helmet>
+        <title>Assignments/{assignment} - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs>
         <NavLink to={assignmentsUrl}>Assignments</NavLink>
         <Typography color="text.primary">{assignment}</Typography>

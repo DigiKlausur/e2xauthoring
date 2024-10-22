@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import { Breadcrumbs } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,9 @@ export default function Template() {
 
   return (
     <>
+      <Helmet>
+        <title>Templates/{template} - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs aria-label="breadcrumb" separator=">">
         <NavLink to={templateUrl}>Templates</NavLink>
         <Typography color="text.primary">{template}</Typography>

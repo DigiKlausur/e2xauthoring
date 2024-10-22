@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Anser from "anser";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -14,7 +14,7 @@ export default function FileDiff() {
   const pool = params.pool;
   const task = params.task;
   const file = searchParams.get("file");
-  const [loading, setLoading] = React.useState(true);
+  const [, setLoading] = React.useState(true);
   const [diff, setDiff] = React.useState("");
 
   React.useEffect(() => {
@@ -26,18 +26,25 @@ export default function FileDiff() {
         setLoading(false);
       }
     });
-  }, []);
+  }, [file, pool, task]);
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        Showing diff for file {pool}/{task}/{file}
-      </Typography>
-      <Paper
-        dangerouslySetInnerHTML={{
-          __html: `<pre>${Anser.ansiToHtml(diff)}</pre>`,
-        }}
-      />
-    </Stack>
+    <>
+      <Helmet>
+        <title>
+          Diff for {pool}/{task}/{file} - e²xauthoring
+        </title>
+      </Helmet>
+      <Stack spacing={2}>
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Showing diff for file {pool}/{task}/{file}
+        </Typography>
+        <Paper
+          dangerouslySetInnerHTML={{
+            __html: `<pre>${Anser.ansiToHtml(diff)}</pre>`,
+          }}
+        />
+      </Stack>
+    </>
   );
 }
