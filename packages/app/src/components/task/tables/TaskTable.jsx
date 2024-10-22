@@ -52,7 +52,7 @@ export default function TaskTable(props) {
   const [openCopy, setOpenCopy] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState({});
 
-  const load = () => {
+  const load = React.useCallback(() => {
     setLoading(true);
     API.tasks.list(props.pool).then((message) => {
       if (message.success) {
@@ -64,11 +64,11 @@ export default function TaskTable(props) {
         setLoading(false);
       }
     });
-  };
+  }, [props.pool]);
 
   React.useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const deleteTask = React.useCallback(
     (pool, task) => () => {
@@ -84,18 +84,24 @@ export default function TaskTable(props) {
         });
       });
     },
+    [confirm, load]
+  );
+
+  const editTask = React.useCallback(
+    (row) => () => {
+      setSelectedRow(row);
+      setOpenEdit(true);
+    },
     []
   );
 
-  const editTask = React.useCallback((row) => () => {
-    setSelectedRow(row);
-    setOpenEdit(true);
-  });
-
-  const copyTask = React.useCallback((row) => () => {
-    setSelectedRow(row);
-    setOpenCopy(true);
-  });
+  const copyTask = React.useCallback(
+    (row) => () => {
+      setSelectedRow(row);
+      setOpenCopy(true);
+    },
+    []
+  );
 
   const commitTask = React.useCallback(
     (row) => () => {
@@ -188,7 +194,7 @@ export default function TaskTable(props) {
         ],
       },
     ],
-    [deleteTask]
+    [deleteTask, editTask, commitTask, copyTask]
   );
 
   return (
