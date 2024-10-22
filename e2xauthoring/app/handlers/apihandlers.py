@@ -6,6 +6,7 @@ from jupyter_client.kernelspec import KernelSpecManager
 from nbgrader.server_extensions.formgrader.base import check_xsrf
 from tornado import web
 
+from ...git import get_author, set_author
 from ...managers import (
     AssignmentManager,
     PresetManager,
@@ -14,7 +15,6 @@ from ...managers import (
     TemplateManager,
     WorksheetManager,
 )
-from ...utils.gitutils import get_author, set_author
 from .base import ApiManageHandler
 
 
