@@ -36,7 +36,9 @@ dev = [
     "hatchling",
     "tbump",
     "sphinx",
-    "pydata-sphinx-theme"
+    "pydata-sphinx-theme",
+    "build",
+    "twine",
 ]
 
 [tool.hatch.version]
@@ -94,6 +96,10 @@ search = '"@e2xauthoring/[\w-]+": "{current_version}'
 [[tool.tbump.before_commit]]
 name = "Build"
 cmd = "python -m build"
+
+[[tool.tbump.before_commit]]
+name = "Check with twine"
+cmd = "twine check dist/*"
 
 [tool.ruff]
 line-length = 100
