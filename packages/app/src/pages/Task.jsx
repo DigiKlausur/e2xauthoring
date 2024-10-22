@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import { Breadcrumbs } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,11 @@ export default function Task() {
 
   return (
     <>
+      <Helmet>
+        <title>
+          Task Pools/{pool}/{task} - e²xauthoring
+        </title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <NavLink to={poolUrl}>Task Pools</NavLink>
         <NavLink to={getPoolUrl(pool)}>{pool}</NavLink>

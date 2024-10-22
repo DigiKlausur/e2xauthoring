@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TaskPoolTable from "../components/pool/tables/TaskPoolTable";
@@ -11,6 +11,9 @@ import GitAuthorNotSetAlert from "../components/alerts/GitAuthorNotSetAlert";
 export default function TaskPools() {
   return (
     <>
+      <Helmet>
+        <title>Task Pools - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <Typography color="text.primary">Task Pools</Typography>
       </Breadcrumbs>

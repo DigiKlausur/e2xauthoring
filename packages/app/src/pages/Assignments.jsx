@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -11,6 +11,9 @@ import CollapsibleAlert from "../components/alerts/CollapsibleAlert";
 export default function Assignments() {
   return (
     <>
+      <Helmet>
+        <title>Assignments - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <Typography color="text.primary">Assignments</Typography>
       </Breadcrumbs>

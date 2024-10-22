@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 import nbformat
 
@@ -7,7 +8,7 @@ class NotebookVariableExtractor:
     def __init__(self):
         self.__pattern = re.compile(r"{{\s*(\w+)\s*}}")
 
-    def extract(self, nb_path):
+    def extract(self, nb_path) -> List[str]:
         nb = nbformat.read(nb_path, as_version=4)
         variables = []
         for cell in nb.cells:

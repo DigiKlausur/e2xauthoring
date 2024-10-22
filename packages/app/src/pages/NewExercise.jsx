@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import CreateWorksheetStepper from "../components/worksheet/create-worksheet/CreateWorksheetStepper";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,11 @@ export default function NewExercise() {
   const name = params.name;
   return (
     <>
+      <Helmet>
+        <title>
+          Assignments/{assignment}/New Worksheet/{name} - e²xauthoring
+        </title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <NavLink to={assignmentsUrl}>Assignments</NavLink>
         <NavLink to={getAssignmentUrl(assignment)}>{assignment}</NavLink>

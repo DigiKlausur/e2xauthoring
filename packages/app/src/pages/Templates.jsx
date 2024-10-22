@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
@@ -11,6 +11,9 @@ import CollapsibleAlert from "../components/alerts/CollapsibleAlert";
 export default function Templates() {
   return (
     <>
+      <Helmet>
+        <title>Templates - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <Typography color="text.primary">Templates</Typography>
       </Breadcrumbs>

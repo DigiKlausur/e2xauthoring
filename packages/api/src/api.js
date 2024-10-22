@@ -84,11 +84,12 @@ export const API = {
         task: name,
         file: file,
       }),
-    create: (pool, name) =>
+    create: (pool, name, kernel_name) =>
       requests.post(TASK_API_ROOT, {
         action: "create",
         pool: pool,
         name: name,
+        kernel_name: kernel_name,
       }),
     rename: (pool, old_name, new_name) =>
       requests.put(TASK_API_ROOT, {

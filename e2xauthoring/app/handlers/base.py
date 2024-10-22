@@ -6,7 +6,7 @@ from e2xcore.handlers import E2xApiHandler
 from nbgrader.server_extensions.formgrader.base import check_xsrf
 from tornado import web
 
-from e2xauthoring.managers.dataclasses import ErrorMessage, SuccessMessage
+from ...dataclasses import ErrorMessage, SuccessMessage
 
 
 def status_msg(method):
@@ -103,22 +103,22 @@ class ApiManageHandler(E2xApiHandler):
     @check_xsrf
     async def get(self):
         result = await self.handle_request("get")
-        self.finish(result.json())
+        self.finish(result.to_json())
 
     @web.authenticated
     @check_xsrf
     async def delete(self):
         result = await self.handle_request("delete")
-        self.finish(result.json())
+        self.finish(result.to_json())
 
     @web.authenticated
     @check_xsrf
     async def put(self):
         result = await self.handle_request("put")
-        self.finish(result.json())
+        self.finish(result.to_json())
 
     @web.authenticated
     @check_xsrf
     async def post(self):
         result = await self.handle_request("post")
-        self.finish(result.json())
+        self.finish(result.to_json())

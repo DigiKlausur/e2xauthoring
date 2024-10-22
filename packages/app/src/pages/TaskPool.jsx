@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Helmet } from "react-helmet";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
@@ -18,6 +18,9 @@ export default function TaskPool() {
 
   return (
     <>
+      <Helmet>
+        <title>Task Pools/{pool} - e²xauthoring</title>
+      </Helmet>
       <Breadcrumbs separator=">">
         <NavLink to={poolUrl}>Task Pools</NavLink>
         <Typography color="text.primary">{pool}</Typography>
