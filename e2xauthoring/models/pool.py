@@ -48,7 +48,7 @@ class Pool(Observer):
 
     def remove(self):
         assert os.path.exists(self.path), f"Pool {self.name} does not exist"
-        os.rmdir(self.path)
+        shutil.rmtree(self.path)
         self.repo.detach(self)
 
     def copy(self, new_name: str):
