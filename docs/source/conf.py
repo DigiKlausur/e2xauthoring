@@ -9,7 +9,7 @@
 project = "e2xauthoring"
 copyright = "2023, Tim Metzler"
 author = "Tim Metzler"
-release = "0.3.0-dev3"
+release = "0.3.0-dev4"
 github_project_url = "https://github.com/Digiklausur/e2xauthoring"
 
 # -- General configuration ---------------------------------------------------
