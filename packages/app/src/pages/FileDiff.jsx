@@ -22,7 +22,7 @@ export default function FileDiff() {
       if (!message.success) {
         alert(message.error);
       } else {
-        setDiff(message.data.diff);
+        setDiff(message.data);
         setLoading(false);
       }
     });
