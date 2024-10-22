@@ -83,8 +83,8 @@ class BaseRepo(Subject):
         """
         if not self.is_version_controlled:
             return 0
-        index_path = os.path.join(self.path, ".git", "index")
-        head_path = os.path.join(self.path, ".git", "HEAD")
+        index_path = os.path.join(self.repo_root, ".git", "index")
+        head_path = os.path.join(self.repo_root, ".git", "HEAD")
         timestamp = 0
         if os.path.exists(index_path):
             timestamp = max(timestamp, os.path.getmtime(index_path))
