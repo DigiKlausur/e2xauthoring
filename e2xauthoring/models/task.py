@@ -42,6 +42,7 @@ class Task(Observer):
     name: str
     pool: str
     path: str
+    base_path: str
     n_questions: int
     points: int
     git_status: Dict[str, str]
@@ -53,6 +54,7 @@ class Task(Observer):
         self.name = name
         self.pool = pool
         self.path = os.path.join(base_path, pool, name)
+        self.base_path = base_path
         self.repo = repo
         self.repo.attach(self)
         self.last_modified = 0
@@ -135,7 +137,7 @@ class Task(Observer):
                 )
         nbformat.write(nb, os.path.join(new_path, f"{new_name}.ipynb"))
         self.repo.update_status()
-        return Task(new_name, self.pool, os.path.dirname(old_path), self.repo)
+        return Task(new_name, self.pool, self.base_path, self.repo)
 
     def rename(self, new_name: str):
         old_path = self.path
