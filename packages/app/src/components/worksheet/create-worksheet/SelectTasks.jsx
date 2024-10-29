@@ -41,7 +41,7 @@ function TaskSelectionTable({ tasks, setChecked, selectedTasks }) {
       flex: 2,
     },
     {
-      field: "questions",
+      field: "n_questions",
       headerName: "# Questions",
       flex: 1,
     },
