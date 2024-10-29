@@ -1,6 +1,6 @@
 {
   "name": "@e2xauthoring/api",
-  "version": "0.3.0-dev4",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "description": "api functions for e2xauthoring",
   "scripts": {
