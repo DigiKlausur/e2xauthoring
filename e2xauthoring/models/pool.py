@@ -22,7 +22,7 @@ class Pool(Observer):
         self.name = name
         self.base_path = base_path
         self.path = os.path.join(base_path, name)
-        self.repo = GitRepoFactory.get_instance(self.path)
+        self.repo = GitRepoFactory.get_instance(os.path.realpath(self.path))
         self.repo.attach(self)
         self._is_version_controlled = self.repo.is_version_controlled
         self.tasks = self.init_tasks()
@@ -68,7 +68,7 @@ class Pool(Observer):
         self.repo.update_status()
 
     def turn_into_repository(self):
-        self.repo = GitRepoFactory.get_instance(self.path)
+        self.repo = GitRepoFactory.get_instance(os.path.realpath(self.path))
         self.repo.attach(self)
         self.repo.initialize_repo(exist_ok=True, author=Actor(**get_author()))
 
