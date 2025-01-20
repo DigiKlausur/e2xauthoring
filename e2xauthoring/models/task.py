@@ -58,7 +58,7 @@ class Task(Observer):
     def __init__(self, name: str, pool: str, base_path: str, repo: GitRepo):
         self.name = name
         self.pool = pool
-        self.path = os.path.join(base_path, pool, name)
+        self.path = os.path.realpath(os.path.join(base_path, pool, name))
         self.base_path = base_path
         self.repo = repo
         self.repo.attach(self)
