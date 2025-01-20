@@ -117,25 +117,27 @@ class Task(Observer):
         self.repo.detach(self)
         self.repo.update_status()
 
+    def _rename_notebook(self, path: str, old_name: str, new_name: str):
+        shutil.move(
+            os.path.join(path, f"{old_name}.ipynb"),
+            os.path.join(path, f"{new_name}.ipynb"),
+        )
+        notebook_path = os.path.join(path, f"{new_name}.ipynb")
+        nb = nbformat.read(notebook_path, as_version=nbformat.NO_CONVERT)
+        for cell in nb.cells:
+            if is_grade(cell):
+                cell.source = cell.source.replace(old_name, new_name)
+                cell.metadata.nbgrader.grade_id = (
+                    cell.metadata.nbgrader.grade_id.replace(old_name, new_name)
+                )
+        nbformat.write(nb, notebook_path)
+
     def copy(self, new_name: str):
         old_path = self.path
         new_path = os.path.join(os.path.dirname(old_path), new_name)
         assert not os.path.exists(new_path), f"Task {new_name} already exists"
         shutil.copytree(old_path, new_path)
-        shutil.move(
-            os.path.join(new_path, f"{self.name}.ipynb"),
-            os.path.join(new_path, f"{new_name}.ipynb"),
-        )
-        nb = nbformat.read(
-            os.path.join(new_path, f"{new_name}.ipynb"), as_version=nbformat.NO_CONVERT
-        )
-        for cell in nb.cells:
-            if is_grade(cell):
-                cell.source = cell.source.replace(self.name, new_name)
-                cell.metadata.nbgrader.grade_id = (
-                    cell.metadata.nbgrader.grade_id.replace(self.name, new_name)
-                )
-        nbformat.write(nb, os.path.join(new_path, f"{new_name}.ipynb"))
+        self._rename_notebook(new_path, self.name, new_name)
         self.repo.update_status()
         return Task(new_name, self.pool, self.base_path, self.repo)
 
@@ -144,6 +146,7 @@ class Task(Observer):
         new_path = os.path.join(os.path.dirname(old_path), new_name)
         assert not os.path.exists(new_path), f"Task {new_name} already exists"
         shutil.move(old_path, new_path)
+        self._rename_notebook(new_path, self.name, new_name)
         self.path = new_path
         self.name = new_name
         self.repo.update_status()
