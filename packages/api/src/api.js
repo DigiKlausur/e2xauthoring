@@ -52,13 +52,13 @@ export const API = {
         name: name,
         init_repository: init_repository,
       }),
-    rename: (old_name, new_name) =>
+    rename: (name, new_name) =>
       requests.put(POOL_API_ROOT, {
         action: "rename",
         old_name: old_name,
         new_name: new_name,
       }),
-    copy: (old_name, new_name) =>
+    copy: (name, new_name) =>
       requests.put(POOL_API_ROOT, {
         action: "copy",
         old_name: old_name,
