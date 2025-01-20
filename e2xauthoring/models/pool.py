@@ -65,6 +65,11 @@ class Pool(Observer):
         os.rename(self.path, new_path)
         self.name = new_name
         self.path = new_path
+
+        self.repo = GitRepoFactory.get_instance(os.path.realpath(self.path))
+        for task in self.tasks.values():
+            task.repo = self.repo
+
         self.repo.update_status()
 
     def turn_into_repository(self):
