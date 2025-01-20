@@ -10,6 +10,9 @@ export default function GitAuthorNotSetAlert() {
       setAuthorIsSet(!!author);
     });
   }, []);
+  const handleAuthorSet = () => {
+    setAuthorIsSet(true);
+  };
   return (
     <>
       {authorIsSet ? (
@@ -17,7 +20,7 @@ export default function GitAuthorNotSetAlert() {
       ) : (
         <Alert severity="warning">
           <AlertTitle>Git Author is not set</AlertTitle>
-          <SetGitAuthorDialog />
+          <SetGitAuthorDialog onAuthorSet={handleAuthorSet} />
         </Alert>
       )}
     </>
