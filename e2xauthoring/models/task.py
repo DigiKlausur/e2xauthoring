@@ -4,7 +4,12 @@ import time
 from typing import Dict
 
 import nbformat
-from e2xcore.utils.nbgrader_cells import get_points, is_grade, new_read_only_cell
+from e2xcore.utils.nbgrader_cells import (
+    get_points,
+    is_grade,
+    is_nbgrader_cell,
+    new_read_only_cell,
+)
 from jupyter_client.kernelspec import KernelSpecManager
 
 from ..dataclasses import GitStatus, TaskRecord
@@ -125,7 +130,7 @@ class Task(Observer):
         notebook_path = os.path.join(path, f"{new_name}.ipynb")
         nb = nbformat.read(notebook_path, as_version=nbformat.NO_CONVERT)
         for cell in nb.cells:
-            if is_grade(cell):
+            if is_nbgrader_cell(cell):
                 cell.source = cell.source.replace(old_name, new_name)
                 cell.metadata.nbgrader.grade_id = (
                     cell.metadata.nbgrader.grade_id.replace(old_name, new_name)
