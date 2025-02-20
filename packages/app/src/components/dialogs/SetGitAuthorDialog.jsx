@@ -9,7 +9,7 @@ import API from "@e2xauthoring/api";
 import { FormDialogWithoutButton } from "./form-dialogs";
 import { FormikTextField } from "../forms/form-components";
 
-export default function SetGitAuthorDialog() {
+export default function SetGitAuthorDialog({ onAuthorSet }) {
   const [open, setOpen] = React.useState(false);
   const formik = useFormik({
     initialValues: {
@@ -24,11 +24,13 @@ export default function SetGitAuthorDialog() {
       email: yup.string().email().required(),
     }),
     onSubmit: (values) => {
-      API.git.setAuthor(values.name, values.email).then((res) => {
+      console.log(values);
+      API.git_author.set(values.name, values.email).then((res) => {
         if (!res["success"]) {
           alert(res["message"]);
         } else {
           setOpen(false);
+          onAuthorSet();
         }
       });
     },
