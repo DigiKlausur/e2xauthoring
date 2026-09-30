@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Check formatting
-        uses: astral-sh/ruff-action@v4
+        uses: astral-sh/ruff-action@v4.1.0
         with:
           args: "format --check --diff"
       - name: Lint
