@@ -41,9 +41,7 @@ class WorksheetManager(BaseManager):
                 {
                     "name": name,
                     "assignment": assignment,
-                    "link": os.path.join(
-                        "taskcreator", "assignments", assignment, name
-                    ),
+                    "link": os.path.join("taskcreator", "assignments", assignment, name),
                 }
             )
 

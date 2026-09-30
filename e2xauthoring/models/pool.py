@@ -124,9 +124,7 @@ class Pool(Observer):
 
     def add_task(self, name: str, kernel_name: str = None):
         task_path = os.path.join(self.path, name)
-        assert not os.path.exists(
-            task_path
-        ), f"Task {name} already exists in pool {self.name}"
+        assert not os.path.exists(task_path), f"Task {name} already exists in pool {self.name}"
         task = Task.create(
             name=name,
             pool=self.name,
@@ -157,9 +155,7 @@ class Pool(Observer):
 
     def commit_task(self, task_name: str, message: str):
         assert task_name in self.tasks, f"No task with the name {task_name} exists."
-        assert (
-            self.repo.is_version_controlled
-        ), f"Pool {self.name} is not version controlled."
+        assert self.repo.is_version_controlled, f"Pool {self.name} is not version controlled."
         task = self.tasks[task_name]
         return self.repo.commit(task.path, add_if_untracked=True, message=message)
 
@@ -167,8 +163,7 @@ class Pool(Observer):
         self.update_tasks()
         self.repo.refresh_repo()
         tasks = [
-            task.to_dataclass(include_git_status=include_git_status)
-            for task in self.tasks.values()
+            task.to_dataclass(include_git_status=include_git_status) for task in self.tasks.values()
         ]
         return PoolRecord(
             name=self.name,

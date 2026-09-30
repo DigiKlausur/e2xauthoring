@@ -23,9 +23,7 @@ class AddTaskHeader(Preprocessor):
         # Task {}
 
         **[{} Point(s)]**
-        """.format(
-                idx, points
-            )
+        """.format(idx, points)
         ).strip()
         return header
 
@@ -44,9 +42,7 @@ class AddTaskHeader(Preprocessor):
         ## Task {}.{}
 
         **[{} Point(s)]**
-        """.format(
-                idx, sub_idx, points
-            )
+        """.format(idx, sub_idx, points)
         ).strip()
         return header
 
@@ -88,9 +84,7 @@ class AddTaskHeader(Preprocessor):
         for task_dict in resources["tasks"]:
             task = os.path.join(task_dict["pool"], task_dict["task"])
             task_path = os.path.join(resources["tmp_dir"], "tasks", task)
-            notebooks = [
-                file for file in os.listdir(task_path) if file.endswith(".ipynb")
-            ]
+            notebooks = [file for file in os.listdir(task_path) if file.endswith(".ipynb")]
             for nb_file in notebooks:
                 idx += 1
                 task_nb = nbformat.read(os.path.join(task_path, nb_file), as_version=4)

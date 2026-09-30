@@ -64,12 +64,8 @@ class BaseRepo(Subject):
         """
         if absolute_paths:
             return GitStatus(
-                untracked=[
-                    os.path.join(self.repo_root, f) for f in self.status.untracked
-                ],
-                unstaged=[
-                    os.path.join(self.repo_root, f) for f in self.status.unstaged
-                ],
+                untracked=[os.path.join(self.repo_root, f) for f in self.status.untracked],
+                unstaged=[os.path.join(self.repo_root, f) for f in self.status.unstaged],
                 staged=[os.path.join(self.repo_root, f) for f in self.status.staged],
             )
         return self.status
@@ -150,9 +146,7 @@ class BaseRepo(Subject):
         if mtime > self.last_modified:
             self.status.unstaged = [item.a_path for item in self.repo.index.diff(None)]
             if self.repo.head.is_valid():
-                self.status.staged = [
-                    item.a_path for item in self.repo.index.diff("HEAD")
-                ]
+                self.status.staged = [item.a_path for item in self.repo.index.diff("HEAD")]
             else:
                 self.status.staged = [key[0] for key in self.repo.index.entries.keys()]
             self.last_modified = mtime
@@ -208,9 +202,7 @@ class BaseRepo(Subject):
         if not self.is_version_controlled:
             return False
         relpath = os.path.relpath(os.path.abspath(path), start=self.repo_root)
-        author_string = (
-            f"{author.name} <{author.email}>" if author is not None else None
-        )
+        author_string = f"{author.name} <{author.email}>" if author is not None else None
         try:
             if add_if_untracked:
                 self.add(path)

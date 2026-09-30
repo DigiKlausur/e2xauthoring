@@ -24,9 +24,7 @@ class GitRepo(BaseRepo):
         Initializes a Git repository.
         """
         if not exist_ok and self.is_version_controlled:
-            raise ValueError(
-                f"A repository already exists at {self.repo.working_tree_dir}"
-            )
+            raise ValueError(f"A repository already exists at {self.repo.working_tree_dir}")
         self._copy_gitignore()
         super().initialize_repo()
         self.commit(

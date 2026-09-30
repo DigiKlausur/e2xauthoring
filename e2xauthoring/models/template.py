@@ -30,8 +30,7 @@ class Template:
         cell = new_read_only_cell(
             grade_id="HeaderA",
             source=(
-                "### This is a header cell\n\n"
-                "It will always appear at the top of the notebook"
+                "### This is a header cell\n\nIt will always appear at the top of the notebook"
             ),
         )
         cell.metadata["nbassignment"] = dict(type="header")
@@ -45,9 +44,7 @@ class Template:
 
     def copy(self, new_name: str):
         new_template_path = os.path.join(os.path.dirname(self.path), new_name)
-        assert not os.path.exists(
-            new_template_path
-        ), f"Template {new_name} already exists"
+        assert not os.path.exists(new_template_path), f"Template {new_name} already exists"
         shutil.copytree(self.path, new_template_path)
         os.rename(
             os.path.join(new_template_path, f"{self.name}.ipynb"),
@@ -57,22 +54,16 @@ class Template:
 
     def rename(self, new_name: str):
         new_template_path = os.path.join(os.path.dirname(self.path), new_name)
-        assert not os.path.exists(
-            new_template_path
-        ), f"Template {new_name} already exists"
+        assert not os.path.exists(new_template_path), f"Template {new_name} already exists"
         os.rename(self.path, new_template_path)
         old_notebook_file = self.notebook_file
-        new_notebook_file = os.path.join(
-            os.path.dirname(old_notebook_file), f"{new_name}.ipynb"
-        )
+        new_notebook_file = os.path.join(os.path.dirname(old_notebook_file), f"{new_name}.ipynb")
         os.rename(old_notebook_file, new_notebook_file)
         self.name = new_name
         self.path = new_template_path
 
     def list_variables(self):
-        assert os.path.exists(
-            self.notebook_file
-        ), f"The template {self.name} does not exist."
+        assert os.path.exists(self.notebook_file), f"The template {self.name} does not exist."
         return NotebookVariableExtractor().extract(self.notebook_file)
 
     def to_dataclass(self) -> TemplateRecord:

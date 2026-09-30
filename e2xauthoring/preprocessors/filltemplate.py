@@ -18,9 +18,7 @@ class FillTemplate(Preprocessor):
             variables = self.__pattern.findall(source)
             new_cell = cell.copy()
             for variable in variables:
-                new_cell.source = new_cell.source.replace(
-                    variable[0], replacements[variable[1]]
-                )
+                new_cell.source = new_cell.source.replace(variable[0], replacements[variable[1]])
             replaced.cells.append(new_cell)
         return replaced
 

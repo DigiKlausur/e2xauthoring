@@ -73,9 +73,7 @@ default_handlers = [
             manager_cls=TaskManager,
             actions=dict(
                 delete=dict(default="remove", actions=["remove"]),
-                get=dict(
-                    default="get", actions=["get", "list", "list_all", "git_diff"]
-                ),
+                get=dict(default="get", actions=["get", "list", "list_all", "git_diff"]),
                 post=dict(default="create", actions=["create"]),
                 put=dict(actions=["copy", "rename", "commit"]),
             ),
