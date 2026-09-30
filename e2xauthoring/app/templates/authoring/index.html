@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>e²xauthoring</title>
+    <link rel="icon" href="{{ static_url }}/favicon.ico" />
+    <script>
+      window.__APP_CONFIG__ = {{ app_config | tojson }};
+    </script>
+    <!-- The bundle has fixed file names; the version busts stale caches. -->
+    <link rel="stylesheet" href="{{ static_url }}/assets/main.css?v={{ version }}" />
+    <script type="module" src="{{ static_url }}/main.js?v={{ version }}"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

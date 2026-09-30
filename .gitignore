@@ -1,5 +1,5 @@
-# Dynamic files
-e2xauthoring/app/templates
+# Frontend build output (authoring-ui/)
+e2xauthoring/app/static/authoring-ui
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
