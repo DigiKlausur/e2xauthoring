@@ -12,9 +12,7 @@ def is_parent_path(parent_path: str, child_path: str) -> bool:
     """
     parent_path = os.path.abspath(parent_path)
     child_path = os.path.abspath(child_path)
-    return os.path.commonpath([parent_path]) == os.path.commonpath(
-        [parent_path, child_path]
-    )
+    return os.path.commonpath([parent_path]) == os.path.commonpath([parent_path, child_path])
 
 
 def list_files(path: str) -> dict:

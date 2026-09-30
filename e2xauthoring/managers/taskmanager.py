@@ -17,9 +17,7 @@ class TaskManager(BaseManager):
 
     def git_diff(self, pool, task, file):
         assert pool in self.pools, f"No pool with the name {pool} exists."
-        assert (
-            task in self.pools[pool]
-        ), f"No task with the name {task} exists in pool {pool}."
+        assert task in self.pools[pool], f"No task with the name {task} exists in pool {pool}."
         file_path = os.path.join(self.pools[pool][task].path, file)
         repo = self.pools[pool].repo
         assert repo.is_version_controlled, "The pool is not version controlled."

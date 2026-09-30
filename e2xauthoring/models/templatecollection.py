@@ -11,9 +11,7 @@ from .template import Template
 
 
 class TemplateCollection(LoggingConfigurable):
-    directory = Unicode("templates", help="Directory where templates are stored").tag(
-        config=True
-    )
+    directory = Unicode("templates", help="Directory where templates are stored").tag(config=True)
 
     templates: Dict[str, Template]
     coursedir: CourseDirectory
@@ -65,9 +63,7 @@ class TemplateCollection(LoggingConfigurable):
 
     def add_template(self, name: str):
         template_path = os.path.join(self.template_path, name)
-        assert not os.path.exists(
-            template_path
-        ), f"Template {name} already exists in templates"
+        assert not os.path.exists(template_path), f"Template {name} already exists in templates"
         template = Template.create(name=name, base_path=self.template_path)
         self.templates[name] = template
 

@@ -24,9 +24,7 @@ class BaseManager(LoggingConfigurable):
         return self.__pattern.match(name) is not None
 
     def listdir(self, path: str) -> List[str]:
-        return [
-            directory for directory in os.listdir(path) if not directory.startswith(".")
-        ]
+        return [directory for directory in os.listdir(path) if not directory.startswith(".")]
 
     @abstractmethod
     def get(self, **kwargs):
@@ -48,9 +46,9 @@ class BaseManager(LoggingConfigurable):
         src_path = os.path.join(self.base_path, old_name)
         dst_path = os.path.join(self.base_path, new_name)
         assert os.path.exists(src_path), "Source does not exist."
-        assert not os.path.exists(
-            dst_path
-        ), "Destination already exists. Please delete first or choose a new name."
+        assert not os.path.exists(dst_path), (
+            "Destination already exists. Please delete first or choose a new name."
+        )
         shutil.copytree(src_path, dst_path)
 
     def rename(self, old_name: str, new_name: str):

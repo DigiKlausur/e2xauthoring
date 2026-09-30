@@ -18,9 +18,7 @@ from ..patterns import Observer
 from ..utils.pathutils import list_files
 
 
-def new_task_notebook(
-    name: str, kernel_name: str = None
-) -> nbformat.notebooknode.NotebookNode:
+def new_task_notebook(name: str, kernel_name: str = None) -> nbformat.notebooknode.NotebookNode:
     metadata = dict(nbassignment=dict(type="task"))
     if kernel_name is not None:
         kernel_spec = KernelSpecManager().get_kernel_spec(kernel_name)
@@ -97,13 +95,9 @@ class Task(Observer):
             self.update(self.repo)
 
     @staticmethod
-    def create(
-        name: str, pool: str, base_path: str, repo: GitRepo, kernel_name: str = None
-    ):
+    def create(name: str, pool: str, base_path: str, repo: GitRepo, kernel_name: str = None):
         task_path = os.path.join(base_path, pool, name)
-        assert not os.path.exists(
-            task_path
-        ), f"Task {name} already exists in pool {pool}"
+        assert not os.path.exists(task_path), f"Task {name} already exists in pool {pool}"
         os.makedirs(os.path.join(task_path, "data"), exist_ok=True)
         os.makedirs(os.path.join(task_path, "img"), exist_ok=True)
         nb = new_task_notebook(name, kernel_name)
@@ -115,9 +109,7 @@ class Task(Observer):
 
     def remove(self):
         task_path = self.path
-        assert os.path.exists(
-            task_path
-        ), f"Task {self.name} does not exist in pool {self.pool}"
+        assert os.path.exists(task_path), f"Task {self.name} does not exist in pool {self.pool}"
         shutil.rmtree(task_path)
         self.repo.detach(self)
         self.repo.update_status()
@@ -132,8 +124,8 @@ class Task(Observer):
         for cell in nb.cells:
             if is_nbgrader_cell(cell):
                 cell.source = cell.source.replace(old_name, new_name)
-                cell.metadata.nbgrader.grade_id = (
-                    cell.metadata.nbgrader.grade_id.replace(old_name, new_name)
+                cell.metadata.nbgrader.grade_id = cell.metadata.nbgrader.grade_id.replace(
+                    old_name, new_name
                 )
         nbformat.write(nb, notebook_path)
 

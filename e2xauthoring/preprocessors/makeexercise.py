@@ -45,9 +45,7 @@ class MakeExercise(Preprocessor):
             for cell in template_nb.cells
             if self.get_cell_type(cell) in ["header", "student_info", "group_info"]
         ]
-        footer = [
-            cell for cell in template_nb.cells if self.get_cell_type(cell) == "footer"
-        ]
+        footer = [cell for cell in template_nb.cells if self.get_cell_type(cell) == "footer"]
         return header, footer
 
     def preprocess(self, resources):
@@ -60,9 +58,7 @@ class MakeExercise(Preprocessor):
         for task_dict in resources["tasks"]:
             task = os.path.join(task_dict["pool"], task_dict["task"])
             task_path = os.path.join(resources["tmp_dir"], "tasks", task)
-            notebooks = [
-                file for file in os.listdir(task_path) if file.endswith(".ipynb")
-            ]
+            notebooks = [file for file in os.listdir(task_path) if file.endswith(".ipynb")]
             for notebook in notebooks:
                 task_nb = nbformat.read(os.path.join(task_path, notebook), as_version=4)
                 exercise.cells.extend(task_nb.cells)

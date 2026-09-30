@@ -14,9 +14,7 @@ class PoolCollection(LoggingConfigurable):
     pools: Dict[str, Pool]
     coursedir: CourseDirectory
 
-    directory = Unicode("pools", help="Directory where pools are stored").tag(
-        config=True
-    )
+    directory = Unicode("pools", help="Directory where pools are stored").tag(config=True)
 
     _instance = None
     _initialized = False

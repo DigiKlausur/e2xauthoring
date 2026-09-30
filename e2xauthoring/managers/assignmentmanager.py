@@ -25,9 +25,7 @@ class AssignmentManager(BaseManager):
                 {
                     "name": assignmentfolder,
                     "exercises": exercises,
-                    "link": os.path.join(
-                        "taskcreator", "assignments", assignmentfolder
-                    ),
+                    "link": os.path.join("taskcreator", "assignments", assignmentfolder),
                 }
             )
 

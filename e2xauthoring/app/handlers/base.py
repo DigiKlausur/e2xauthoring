@@ -54,12 +54,10 @@ class ApiManageHandler(E2xApiHandler):
             if request_type in allowed_actions:
                 actions = allowed_actions[request_type].get("actions", [])
                 for action in actions:
-                    assert hasattr(
-                        self.__manager, action
-                    ), f"The manager class does not provide an action called {action}."
-                action_dict["default"] = allowed_actions[request_type].get(
-                    "default", None
-                )
+                    assert hasattr(self.__manager, action), (
+                        f"The manager class does not provide an action called {action}."
+                    )
+                action_dict["default"] = allowed_actions[request_type].get("default", None)
                 action_dict["actions"].extend(actions)
 
     def extract_arguments(self, method: str):
@@ -73,9 +71,9 @@ class ApiManageHandler(E2xApiHandler):
         return params
 
     async def perform_action(self, action: str, allowed_actions: List[str]):
-        assert (
-            action is not None and action in allowed_actions
-        ), f"Action {action} is not a valid action."
+        assert action is not None and action in allowed_actions, (
+            f"Action {action} is not a valid action."
+        )
         method = getattr(self.__manager, action)
         arguments = self.extract_arguments(method)
 
@@ -88,16 +86,15 @@ class ApiManageHandler(E2xApiHandler):
     @status_msg
     async def handle_request(self, request_type: str):
         action = self.get_argument(
-            "action", default=None  # self.__allowed_actions[request_type]["default"]
+            "action",
+            default=None,  # self.__allowed_actions[request_type]["default"]
         )
         if action is None:
             action = (self.get_json_body() or dict()).get(
                 "action", self.__allowed_actions[request_type]["default"]
             )
 
-        return await self.perform_action(
-            action, self.__allowed_actions[request_type]["actions"]
-        )
+        return await self.perform_action(action, self.__allowed_actions[request_type]["actions"])
 
     @web.authenticated
     @check_xsrf

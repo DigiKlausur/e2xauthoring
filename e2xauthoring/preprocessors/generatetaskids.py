@@ -29,16 +29,12 @@ class GenerateTaskIDs(Preprocessor):
             for idx in subtask:
                 cell = nb.cells[idx]
                 if is_description(cell):
-                    cell.metadata.nbgrader.grade_id = "{}_Description{}".format(
-                        subtask_id, headers
-                    )
+                    cell.metadata.nbgrader.grade_id = "{}_Description{}".format(subtask_id, headers)
                     headers += 1
                 elif is_solution(cell):
                     cell.metadata.nbgrader.grade_id = subtask_id
                 elif is_grade(cell):
-                    cell.metadata.nbgrader.grade_id = "test_{}{}".format(
-                        subtask_id, tests
-                    )
+                    cell.metadata.nbgrader.grade_id = "test_{}{}".format(subtask_id, tests)
                     tests += 1
 
         if "header" in task:
