@@ -103,5 +103,6 @@ cmd = "twine check dist/*"
 
 [tool.ruff]
 line-length = 100
-ignore-init-module-imports = true
-select = ["E", "F", "I"]
+
+[tool.ruff.lint]
+select = ["F", "E", "I"]
