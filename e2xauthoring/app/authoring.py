@@ -10,7 +10,8 @@ from .handlers.handlers import default_handlers as handlers
 
 class AuthoringApp(NbGrader, BaseApp):
     template_path = os.path.join(os.path.dirname(__file__), "templates")
-    static_path = os.path.join(template_path, "authoring", "static")
+    # The Vite build of authoring-ui/ is written to static/authoring-ui.
+    static_path = os.path.join(os.path.dirname(__file__), "static")
 
     def __init__(self, **kwargs) -> None:
         NbGrader.__init__(self, **kwargs)

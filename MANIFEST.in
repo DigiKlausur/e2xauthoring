@@ -1,1 +1,2 @@
 recursive-include e2xauthoring/app/templates *
+recursive-include e2xauthoring/app/static *

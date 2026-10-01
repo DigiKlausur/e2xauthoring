@@ -20,7 +20,7 @@ repos:
     hooks:
       - id: prettier
         name: prettier
-        entry: 'npm run prettier:files'
-        language: node
-        types_or: [json, markdown, ts, tsx, javascript, jsx, css]
-        exclude_types: [jupyter]
+        entry: authoring-ui/node_modules/.bin/prettier --write --ignore-unknown
+        language: system
+        files: ^authoring-ui/
+        types_or: [json, ts, tsx, javascript, css]
