@@ -12,6 +12,7 @@ export default defineConfig(() => ({
       "@domain": path.resolve(import.meta.dirname, "src/domain"),
       "@hooks": path.resolve(import.meta.dirname, "src/hooks"),
       "@components": path.resolve(import.meta.dirname, "src/components"),
+      "@lib": path.resolve(import.meta.dirname, "src/lib")
     },
   },
   build: {
