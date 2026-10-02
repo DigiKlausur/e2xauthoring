@@ -1,7 +1,6 @@
-import glob
 import os
 import shutil
-from typing import Dict, Optional
+from typing import Dict, Optional, Set
 
 from git import Actor
 
@@ -68,35 +67,39 @@ class Pool:
     def is_version_controlled(self) -> bool:
         return self.repo.is_version_controlled
 
-    def is_task_path(self, path):
-        task_name = os.path.relpath(os.path.dirname(path), start=self.path)
-        notebook_name = os.path.splitext(os.path.basename(path))[0]
-        return task_name == notebook_name
+    def find_task_names(self) -> Set[str]:
+        """Find all tasks in the pool.
+
+        A task is a directory containing a notebook with the same name.
+        This lists the pool directory once and checks each candidate with a
+        single stat, which is much cheaper on NFS than listing every task
+        directory.
+        """
+        try:
+            entries = list(os.scandir(self.path))
+        except FileNotFoundError:
+            return set()
+        return {
+            entry.name
+            for entry in entries
+            if not entry.name.startswith(".")
+            and entry.is_dir()
+            and os.path.isfile(os.path.join(entry.path, f"{entry.name}.ipynb"))
+        }
 
     def init_tasks(self):
-        paths = glob.glob(os.path.join(self.path, "*", "*.ipynb"))
-        tasks = dict()
-        for path in paths:
-            if self.is_task_path(path):
-                task_name = os.path.relpath(os.path.dirname(path), start=self.path)
-                tasks[task_name] = Task(
-                    name=task_name,
-                    pool=self.name,
-                    base_path=self.base_path,
-                    repo=self.repo,
-                )
-
-        return tasks
+        return {
+            task_name: Task(
+                name=task_name,
+                pool=self.name,
+                base_path=self.base_path,
+                repo=self.repo,
+            )
+            for task_name in self.find_task_names()
+        }
 
     def update_tasks(self):
-        paths = glob.glob(os.path.join(self.path, "*", "*.ipynb"))
-        task_names = set(
-            [
-                os.path.relpath(os.path.dirname(path), start=self.path)
-                for path in paths
-                if self.is_task_path(path)
-            ]
-        )
+        task_names = self.find_task_names()
         existing_names = set(self.tasks.keys())
         deleted = existing_names - task_names
         added = task_names - existing_names
@@ -159,6 +162,8 @@ class Pool:
         """
         self.update_tasks()
         repo_status = self.repo.status(cache=status_cache)
+        if include_git_status:
+            repo_status = repo_status.expand_untracked(self.path)
         tasks = [
             task.to_dataclass(include_git_status=include_git_status, repo_status=repo_status)
             for task in self.tasks.values()

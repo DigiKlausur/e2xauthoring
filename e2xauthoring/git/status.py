@@ -1,6 +1,6 @@
 import os
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Iterable, List, Optional, Tuple
 
 from ..dataclasses import GitStatus
@@ -53,6 +53,8 @@ class RepoStatus:
 
     Paths are relative to the repository root and use forward slashes.
     A root of None means the path is not version controlled.
+    New directories are listed as a single "dir/" entry in untracked
+    until they are expanded with expand_untracked.
     """
 
     root: Optional[str] = None
@@ -64,19 +66,58 @@ class RepoStatus:
     def is_version_controlled(self) -> bool:
         return self.root is not None
 
+    def _prefix(self, path: str) -> str:
+        # No realpath here: it costs an lstat per path component, which adds up
+        # on NFS. Pool and task paths are already resolved.
+        relpath = os.path.relpath(path, start=self.root)
+        return "" if relpath == "." else relpath.replace(os.sep, "/") + "/"
+
+    def _untracked_dirs(self, prefix: str) -> List[str]:
+        # Untracked directories below the prefix or containing it
+        return [
+            f
+            for f in self.untracked
+            if f.endswith("/") and (f.startswith(prefix) or prefix.startswith(f))
+        ]
+
+    def expand_untracked(self, path: str) -> "RepoStatus":
+        """List the files of the untracked directories that touch a path.
+
+        Only the directories below or containing the path are expanded, so
+        callers pay for the extra git call only where they need file lists.
+
+        Args:
+            path (str): An absolute, resolved path inside the repository
+
+        Returns:
+            RepoStatus: A status with those directories replaced by their files
+        """
+        if not self.is_version_controlled:
+            return self
+        dirs = self._untracked_dirs(self._prefix(path))
+        if not dirs:
+            return self
+        files = [f for f in self.untracked if f not in dirs]
+        output = _run_git(
+            self.root, ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *dirs]
+        )
+        files.extend(os.fsdecode(f) for f in output.split(b"\0") if f)
+        return replace(self, untracked=tuple(files))
+
     def for_path(self, path: str) -> GitStatus:
         """Get the status of all files below a path.
 
+        Untracked directories are only listed as files after expand_untracked.
+
         Args:
-            path (str): An absolute path inside the repository
+            path (str): An absolute, resolved path inside the repository
 
         Returns:
             GitStatus: The status with file paths relative to the given path
         """
         if not self.is_version_controlled:
             return GitStatus(status="not version controlled")
-        relpath = os.path.relpath(os.path.realpath(path), start=self.root)
-        prefix = "" if relpath == "." else relpath.replace(os.sep, "/") + "/"
+        prefix = self._prefix(path)
 
         def below(files: Iterable[str]) -> List[str]:
             return [f[len(prefix) :] for f in files if f.startswith(prefix)]
@@ -84,7 +125,9 @@ class RepoStatus:
         staged = below(self.staged)
         unstaged = below(self.unstaged)
         untracked = below(self.untracked)
-        changed = len(staged) + len(unstaged) + len(untracked) > 0
+        # The path may lie inside an untracked directory, e.g. a task in a new pool
+        inside_untracked = any(prefix.startswith(f) for f in self._untracked_dirs(prefix))
+        changed = inside_untracked or len(staged) + len(unstaged) + len(untracked) > 0
         return GitStatus(
             status="modified" if changed else "unchanged",
             staged=staged,
@@ -144,20 +187,6 @@ def _run_git(root: str, args: Iterable[str]) -> bytes:
     return result.stdout
 
 
-def _expand_untracked_dirs(root: str, untracked: List[str]) -> List[str]:
-    # -unormal reports a new directory as a single "dir/" entry.
-    # List its files so callers see every file a commit would add.
-    dirs = [path for path in untracked if path.endswith("/")]
-    if not dirs:
-        return untracked
-    files = [path for path in untracked if not path.endswith("/")]
-    output = _run_git(
-        root, ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *dirs]
-    )
-    files.extend(os.fsdecode(path) for path in output.split(b"\0") if path)
-    return files
-
-
 def get_repo_status(root: str) -> RepoStatus:
     """Get the status of a whole repository with a single git status call.
 
@@ -172,5 +201,5 @@ def get_repo_status(root: str) -> RepoStatus:
         root=root,
         staged=tuple(staged),
         unstaged=tuple(unstaged),
-        untracked=tuple(_expand_untracked_dirs(root, untracked)),
+        untracked=tuple(untracked),
     )

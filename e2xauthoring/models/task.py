@@ -150,9 +150,11 @@ class Task:
             self.update_task_info()
         if repo_status is None:
             repo_status = self.repo.status()
-        status = repo_status.for_path(self.path)
         if not include_git_status:
-            status = GitStatus(status=status.status)
+            return self._record(GitStatus(status=repo_status.for_path(self.path).status))
+        return self._record(repo_status.expand_untracked(self.path).for_path(self.path))
+
+    def _record(self, status: GitStatus) -> TaskRecord:
         return TaskRecord(
             name=self.name,
             pool=self.pool,
