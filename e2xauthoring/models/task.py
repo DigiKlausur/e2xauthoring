@@ -1,7 +1,6 @@
 import os
 import shutil
-import time
-from typing import Dict
+from typing import Optional
 
 import nbformat
 from e2xcore.utils.nbgrader_cells import (
@@ -13,9 +12,7 @@ from e2xcore.utils.nbgrader_cells import (
 from jupyter_client.kernelspec import KernelSpecManager
 
 from ..dataclasses import GitStatus, TaskRecord
-from ..git import GitRepo
-from ..patterns import Observer
-from ..utils.pathutils import list_files
+from ..git import GitRepo, RepoStatus
 
 
 def new_task_notebook(name: str, kernel_name: str = None) -> nbformat.notebooknode.NotebookNode:
@@ -41,16 +38,14 @@ def new_task_notebook(name: str, kernel_name: str = None) -> nbformat.notebookno
     return nb
 
 
-class Task(Observer):
+class Task:
     name: str
     pool: str
     path: str
     base_path: str
     n_questions: int
     points: int
-    git_status: Dict[str, str]
     last_modified: float
-    last_updated: float
     repo: GitRepo
 
     def __init__(self, name: str, pool: str, base_path: str, repo: GitRepo):
@@ -59,40 +54,8 @@ class Task(Observer):
         self.path = os.path.realpath(os.path.join(base_path, pool, name))
         self.base_path = base_path
         self.repo = repo
-        self.repo.attach(self)
         self.last_modified = 0
-        self.last_updated = self.repo.last_full_update
         self.update_task_info()
-        self.full_git_status = self.repo.get_status_of_path(self.path)
-        self.file_dict = list_files(self.path)
-
-    def update(self, subject: GitRepo):
-        self.last_updated = subject.last_full_update
-        self.full_git_status = subject.get_status_of_path(self.path)
-        self.file_dict = list_files(self.path)
-
-    @property
-    def git_status(self):
-        if not self.repo.is_version_controlled:
-            return dict(status="not version controlled")
-        elif (
-            len(
-                self.full_git_status.unstaged
-                + self.full_git_status.staged
-                + self.full_git_status.untracked
-            )
-            > 0
-        ):
-            return dict(status="modified")
-        else:
-            return dict(status="unchanged")
-
-    def check_for_changes(self):
-        current_file_dict = list_files(self.path)
-        if set(current_file_dict.items()) != set(self.file_dict.items()):
-            self.repo.update_status()
-        elif self.last_updated < self.repo.last_full_update:
-            self.update(self.repo)
 
     @staticmethod
     def create(name: str, pool: str, base_path: str, repo: GitRepo, kernel_name: str = None):
@@ -102,17 +65,12 @@ class Task(Observer):
         os.makedirs(os.path.join(task_path, "img"), exist_ok=True)
         nb = new_task_notebook(name, kernel_name)
         nbformat.write(nb, os.path.join(task_path, f"{name}.ipynb"))
-        # Sleep to ensure that the file is written before the repo is updated
-        time.sleep(0.5)
-
         return Task(name, pool, base_path, repo)
 
     def remove(self):
         task_path = self.path
         assert os.path.exists(task_path), f"Task {self.name} does not exist in pool {self.pool}"
         shutil.rmtree(task_path)
-        self.repo.detach(self)
-        self.repo.update_status()
 
     def _rename_notebook(self, path: str, old_name: str, new_name: str):
         shutil.move(
@@ -135,7 +93,6 @@ class Task(Observer):
         assert not os.path.exists(new_path), f"Task {new_name} already exists"
         shutil.copytree(old_path, new_path)
         self._rename_notebook(new_path, self.name, new_name)
-        self.repo.update_status()
         return Task(new_name, self.pool, self.base_path, self.repo)
 
     def rename(self, new_name: str):
@@ -146,7 +103,6 @@ class Task(Observer):
         self._rename_notebook(new_path, self.name, new_name)
         self.path = new_path
         self.name = new_name
-        self.repo.update_status()
 
     @property
     def notebook_file(self):
@@ -180,20 +136,23 @@ class Task(Observer):
                 self.n_questions = len(points)
                 self.last_modified = last_modified
 
-    def to_dataclass(self, include_git_status=False) -> TaskRecord:
+    def to_dataclass(
+        self, include_git_status=False, repo_status: Optional[RepoStatus] = None
+    ) -> TaskRecord:
+        """
+        Args:
+            include_git_status (bool, optional): Whether to include the lists of changed files.
+                Defaults to False.
+            repo_status (RepoStatus, optional): The status of the repository, if already
+                fetched for this request. Fetched from git if not given. Defaults to None.
+        """
         if self.is_dirty:
             self.update_task_info()
-        status = GitStatus(
-            status=self.git_status["status"],
-        )
-        if include_git_status:
-            self.check_for_changes()
-            status = GitStatus(
-                status=self.git_status["status"],
-                staged=self.full_git_status.staged,
-                unstaged=self.full_git_status.unstaged,
-                untracked=self.full_git_status.untracked,
-            )
+        if repo_status is None:
+            repo_status = self.repo.status()
+        status = repo_status.for_path(self.path)
+        if not include_git_status:
+            status = GitStatus(status=status.status)
         return TaskRecord(
             name=self.name,
             pool=self.pool,

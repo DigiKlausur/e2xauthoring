@@ -62,12 +62,6 @@ class PoolCollection(LoggingConfigurable):
         added_pools = set(pool_names) - set(self.pools.keys())
         for pool_name in added_pools:
             self.init_pool(pool_name)
-        # For each pool that is not a repository, check if it is now a repository
-        for pool in self.pools.values():
-            if not pool.is_version_controlled():
-                pool.repo.get_repo()
-                if pool.is_version_controlled():
-                    pool.repo.update_status()
 
     def add_pool(self, pool_name: str, init_repo: bool = False):
         pool_path = os.path.join(self.pool_path, pool_name)
@@ -120,10 +114,11 @@ class PoolCollection(LoggingConfigurable):
 
     def to_dataclass(self, include_git_status=False) -> PoolCollectionRecord:
         self.update_pools()
-
+        # Pools in the same repository share a single git status call
+        status_cache = dict()
         return PoolCollectionRecord(
             pools=[
-                pool.to_dataclass(include_git_status=include_git_status)
+                pool.to_dataclass(include_git_status=include_git_status, status_cache=status_cache)
                 for pool in self.pools.values()
             ]
         )
