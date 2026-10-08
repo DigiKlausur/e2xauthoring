@@ -12,7 +12,9 @@ from traitlets.config import LoggingConfigurable
 class BaseManager(LoggingConfigurable):
     directory = Unicode(".", help="The directory of the items to manage")
 
-    def __init__(self, coursedir: CourseDirectory) -> None:
+    def __init__(self, coursedir: CourseDirectory, **kwargs) -> None:
+        # The course directory holds the config loaded from nbgrader_config.py
+        super().__init__(config=coursedir.config, **kwargs)
         self.coursedir = coursedir
         self.__pattern = re.compile(r"^[A-Za-z\d]+[\w-]*$")
 

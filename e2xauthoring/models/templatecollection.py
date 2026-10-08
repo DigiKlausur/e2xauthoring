@@ -4,17 +4,16 @@ from typing import Dict
 
 from nbgrader.coursedir import CourseDirectory
 from traitlets import Unicode
-from traitlets.config import LoggingConfigurable
 
 from ..dataclasses import TemplateCollectionRecord
+from .resourcecollection import ResourceCollection
 from .template import Template
 
 
-class TemplateCollection(LoggingConfigurable):
+class TemplateCollection(ResourceCollection):
     directory = Unicode("templates", help="Directory where templates are stored").tag(config=True)
 
     templates: Dict[str, Template]
-    coursedir: CourseDirectory
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -22,14 +21,16 @@ class TemplateCollection(LoggingConfigurable):
             cls._instance = super(TemplateCollection, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, coursedir: CourseDirectory):
+    def __init__(self, coursedir: CourseDirectory, **kwargs):
+        # The course directory holds the config loaded from nbgrader_config.py
+        super().__init__(config=coursedir.config, **kwargs)
         self.coursedir = coursedir
         self.templates = dict()
         self.init_templates()
 
     @property
     def template_path(self):
-        return self.coursedir.format_path(self.directory, ".", ".")
+        return self.resource_path
 
     def __getitem__(self, key):
         return self.templates[key]

@@ -6,6 +6,7 @@ class TaskPoolManager(BaseManager):
     pools: PoolCollection
 
     def __init__(self, coursedir):
+        super().__init__(coursedir)
         self.pools = PoolCollection(coursedir)
 
     def assert_pool_exists(self, name):

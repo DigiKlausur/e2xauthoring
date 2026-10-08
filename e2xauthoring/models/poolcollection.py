@@ -4,15 +4,14 @@ from typing import Dict, List
 
 from nbgrader.coursedir import CourseDirectory
 from traitlets import Unicode
-from traitlets.config import LoggingConfigurable
 
 from ..dataclasses import PoolCollectionRecord
 from .pool import Pool
+from .resourcecollection import ResourceCollection
 
 
-class PoolCollection(LoggingConfigurable):
+class PoolCollection(ResourceCollection):
     pools: Dict[str, Pool]
-    coursedir: CourseDirectory
 
     directory = Unicode("pools", help="Directory where pools are stored").tag(config=True)
 
@@ -24,8 +23,10 @@ class PoolCollection(LoggingConfigurable):
             cls._instance = super(PoolCollection, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, coursedir: CourseDirectory):
+    def __init__(self, coursedir: CourseDirectory, **kwargs):
         if not self._initialized:
+            # The course directory holds the config loaded from nbgrader_config.py
+            super().__init__(config=coursedir.config, **kwargs)
             self.coursedir = coursedir
             self.pools = dict()
             self.init_pools()
@@ -39,7 +40,7 @@ class PoolCollection(LoggingConfigurable):
 
     @property
     def pool_path(self):
-        return self.coursedir.format_path(self.directory, ".", ".")
+        return self.resource_path
 
     def get_pool_paths(self) -> List[str]:
         paths = glob.glob(os.path.join(self.pool_path, "*"))
