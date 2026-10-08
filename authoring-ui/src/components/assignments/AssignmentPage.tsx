@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ExternalLink, Plus, Trash2 } from "lucide-react";
 import type { Worksheet } from "@api";
 import { useDocumentTitle } from "@hooks/ui";
@@ -22,7 +22,19 @@ export function AssignmentPage() {
   const navigate = useNavigate();
   const worksheets = useWorksheets(assignment);
 
-  const [naming, setNaming] = useState(false);
+  // A freshly created assignment opens straight into the new-worksheet dialog.
+  const location = useLocation();
+  const [naming, setNaming] = useState(
+    () =>
+      (location.state as { newWorksheet?: boolean } | null)?.newWorksheet ===
+      true,
+  );
+  // Drop the flag so going back or reloading does not reopen the dialog.
+  useEffect(() => {
+    if (location.state != null) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.state, location.pathname, navigate]);
   const [deleting, setDeleting] = useState<Worksheet | null>(null);
   const remove = useDeleteWorksheet(assignment, deleting?.name ?? "");
 

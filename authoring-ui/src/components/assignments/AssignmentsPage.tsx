@@ -149,7 +149,10 @@ export function AssignmentsPage() {
         error={create.error}
         onSubmit={(assignment) =>
           create.mutate(assignment, {
-            onSuccess: () => navigate(routes.assignment(assignment.name)),
+            onSuccess: () =>
+              navigate(routes.assignment(assignment.name), {
+                state: { newWorksheet: true },
+              }),
           })
         }
       />
