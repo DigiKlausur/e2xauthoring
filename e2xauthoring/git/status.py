@@ -99,7 +99,7 @@ class RepoStatus:
             return self
         files = [f for f in self.untracked if f not in dirs]
         output = _run_git(
-            self.root, ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *dirs]
+            self.root, ["git", "ls-files", "-z", "--others", "--exclude-standard", "--", *dirs] # type: ignore
         )
         files.extend(os.fsdecode(f) for f in output.split(b"\0") if f)
         return replace(self, untracked=tuple(files))
