@@ -6,6 +6,7 @@ class TemplateManager(BaseManager):
     templates: TemplateCollection
 
     def __init__(self, coursedir):
+        super().__init__(coursedir)
         self.templates = TemplateCollection(coursedir)
 
     def get(self, name: str):

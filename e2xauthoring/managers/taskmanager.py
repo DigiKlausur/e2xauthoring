@@ -8,6 +8,7 @@ class TaskManager(BaseManager):
     pools: PoolCollection
 
     def __init__(self, coursedir):
+        super().__init__(coursedir)
         self.pools = PoolCollection(coursedir)
 
     def commit(self, pool, task, message):
