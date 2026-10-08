@@ -47,13 +47,15 @@ path = "e2xauthoring/__version__.py"
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder"]
 build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = ["e2xauthoring/app/static/authoring-ui/main.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+path = "authoring-ui"
 build_cmd = "build"
 
 [tool.hatch.build]
 artifacts = [
-    "e2xauthoring/app/templates/"
+    "e2xauthoring/app/static/authoring-ui/*"
 ]
 
 [tool.tbump]
@@ -82,16 +84,8 @@ src = "e2xauthoring/__version__.py"
 src = "docs/source/conf.py"
 
 [[tool.tbump.file]]
-src = "package.json"
+src = "authoring-ui/package.json"
 search = '"version": "{current_version}'
-
-[[tool.tbump.file]]
-src = "packages/*/package.json"
-search = '"version": "{current_version}'
-
-[[tool.tbump.file]]
-src = "packages/*/package.json"
-search = '"@e2xauthoring/[\w-]+": "{current_version}'
 
 [[tool.tbump.before_commit]]
 name = "Build"

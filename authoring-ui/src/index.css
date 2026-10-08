@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand: Hochschule Bonn-Rhein-Sieg */
+  --color-hbrs-dark-blue: #005d92;
+  --color-hbrs-medium-blue: #079dde;
+  --color-hbrs-light-blue: #d8f3ff;
+
+  /* Semantic tokens: components use these */
+  --color-primary: var(--color-hbrs-dark-blue);
+  --color-primary-hover: var(--color-hbrs-medium-blue);
+  --color-primary-subtle: var(--color-hbrs-light-blue);
+  --color-primary-foreground: #fff;
+  --color-danger: var(--color-red-600);
+  --color-danger-hover: var(--color-red-700);
+  --color-page: #f5f7fb;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  * {
+    border-color: var(--color-gray-200, #e5e7eb);
+  }
+}
