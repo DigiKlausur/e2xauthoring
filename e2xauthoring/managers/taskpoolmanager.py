@@ -35,4 +35,5 @@ class TaskPoolManager(BaseManager):
         self.pools.remove_pool(name)
 
     def list(self):
-        return self.pools.to_json(include_git_status=True)["pools"]
+        # The pool overview only shows the task status, not the changed files
+        return self.pools.to_json(include_git_status=False)["pools"]
