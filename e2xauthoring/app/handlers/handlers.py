@@ -28,7 +28,8 @@ class AuthoringHandler(BaseHandler):
             baseUrl=urljoin(self.base_url, app_url),
             apiUrl=urljoin(self.base_url, "e2x", "authoring", "api"),
             formgraderApiUrl=urljoin(self.base_url, "formgrader", "api"),
-            notebookUrl=urljoin(self.base_url, "notebooks", self.url_prefix),
+            # Notebook 7 serves /notebooks; the classic UI lives under /nbclassic
+            notebookUrl=urljoin(self.base_url, "nbclassic", "notebooks", self.url_prefix),
         )
         self.write(
             self.render(

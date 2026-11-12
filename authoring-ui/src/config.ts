@@ -2,7 +2,7 @@ export interface AppConfig {
   baseUrl: string; // router basename, e.g. "/e2x/authoring/app"
   apiUrl: string; // authoring API root, e.g. "/e2x/authoring/api"
   formgraderApiUrl: string; // nbgrader formgrader API root, e.g. "/formgrader/api"
-  notebookUrl: string; // Jupyter notebook view root, e.g. "/notebooks/course"
+  notebookUrl: string; // classic notebook view root, e.g. "/nbclassic/notebooks/course"
 }
 
 declare global {
@@ -19,7 +19,7 @@ export function getConfig(): AppConfig {
     apiUrl: import.meta.env.VITE_API_URL || "/api",
     formgraderApiUrl:
       import.meta.env.VITE_FORMGRADER_API_URL || "/formgrader/api",
-    notebookUrl: import.meta.env.VITE_NOTEBOOK_URL || "/notebooks",
+    notebookUrl: import.meta.env.VITE_NOTEBOOK_URL || "/nbclassic/notebooks",
   };
 }
 
